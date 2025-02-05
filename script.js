@@ -1,4 +1,4 @@
-// Global slide navigation and response storage
+// Global slide navigation and responses storage
 let currentSlideIndex = 0;
 const slides = [];  // All slide elements will be stored here
 const responses = [];
