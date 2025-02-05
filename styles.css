@@ -1,4 +1,4 @@
-/* Generalll Styles */
+/* General Styles */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: #f7f9fc;
@@ -25,13 +25,19 @@ h2 {
   margin-bottom: 10px;
 }
 
-/* Slide Navigation */
+/* Slide Styles */
 .slide {
   display: none;
+  animation: fadeIn 0.5s;
 }
 
 .slide.active {
   display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Table Styles */
@@ -82,14 +88,20 @@ th {
   opacity: 1;
 }
 
-/* Tooltip for Icons */
+/* Icon Tooltip for Attribute Levels */
 .icon-tooltip {
-  cursor: default;
+  cursor: pointer;
   margin-right: 5px;
+  font-size: 18px;
 }
 
-/* Next Button */
-.next-button {
+/* Navigation Buttons */
+.navigation-buttons {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.next-button, .back-button {
   background-color: #0a9396;
   color: #fff;
   border: none;
@@ -97,60 +109,40 @@ th {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  display: block;
-  margin: 20px auto 0;
+  margin: 5px;
 }
 
-.next-button:disabled {
+.back-button {
+  background-color: #005f73;
+}
+
+.next-button:disabled, .back-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-/* Scorecard Total Points Display */
-#points-total {
+/* Example Task Animation */
+.example-animation {
   text-align: center;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-/* Task Slide Specific Styles */
-.task-slide table {
   margin-top: 20px;
 }
 
-.task-slide th {
-  background-color: #d0ebff;
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+  th, td {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .next-button, .back-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 }
 
-.task-slide .questions fieldset {
-  border: none;
-  margin: 10px 0;
-  padding: 0;
-}
-
-.task-slide .questions label {
-  display: block;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
-
-/* Visual Icons (for cost and progress) */
-.dollar-icon {
-  font-weight: bold;
-  font-size: 16px;
-  margin-right: 2px;
-  color: #2e7d32;
-}
-
-.progress-bar {
-  border: 1px solid #aaa;
-  width: 50px;
-  height: 10px;
-  background-color: #ddd;
-  margin-right: 5px;
-}
-
-/* Thank-you Message */
+/* Thank You Message */
 .message {
   text-align: center;
   font-size: 18px;
