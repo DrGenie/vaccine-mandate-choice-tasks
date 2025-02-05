@@ -14,13 +14,13 @@
 </head>
 <body>
   <div class="container" id="survey-container">
-    <!-- Slide 1: Attribute Scorecard (Training) -->
+    <!-- Slide 1: Attribute Training Scorecard -->
     <div class="slide active" id="slide-1">
       <header>
         <h1>To mandate or not to mandate?</h1>
         <h2>Public preferences for vaccine mandates in Australia and international comparators</h2>
         <p>
-          <strong>Brief Background:</strong> Government COVID‑19 vaccine mandates have included employment mandates and public space mandates. This study aims to quantify public preferences and trade‑offs among key features of future vaccine mandates.
+          <strong>Brief Background:</strong> Government COVID‑19 vaccine mandates have included employment and public space mandates. This study aims to quantify public preferences and trade‑offs among key features of future vaccine mandates.
         </p>
       </header>
       <h3>Attribute Scorecard</h3>
@@ -43,7 +43,7 @@
             <tr>
               <td>
                 <strong>Scope of Mandate</strong>
-                <span class="info-icon" data-tooltip="Defines who must be vaccinated. 'High‑risk occupations only' targets critical roles (e.g. healthcare), reducing disruption. 'All occupations and public spaces' covers everyone for maximum public health benefit, but may be more intrusive.">ℹ️</span>
+                <span class="info-icon" data-tooltip="Defines who must be vaccinated. 'High‑risk occupations only' targets critical roles (e.g., healthcare), reducing disruption. 'All occupations and public spaces' covers everyone for maximum public health benefit, but may be more intrusive.">ℹ️</span>
               </td>
               <td>
                 <strong>High‑risk occupations only:</strong> Required for individuals in high‑risk roles.<br>
@@ -62,7 +62,7 @@
                 <strong>Local Mandate:</strong> Enforced by local authorities.<br>
                 <strong>National Mandate:</strong> Uniform enforcement by central government.<br>
                 <strong>Private Mandate:</strong> Imposed by private organizations.<br>
-                <em>Rationale:</em> Reflects differences in enforcement, legitimacy and reach.
+                <em>Rationale:</em> Reflects differences in enforcement, legitimacy, and reach.
               </td>
               <td><input type="number" name="points_admin" min="0" max="100" required></td>
             </tr>
@@ -103,7 +103,7 @@
               <td>
                 <strong>No incentives:</strong> No additional rewards.<br>
                 <strong>Paid time off for vaccination (1–3 days):</strong> Compensates for lost work time.<br>
-                <strong>Government subsidies/discounts on services:</strong> Direct financial benefits.<br>
+                <strong>Government subsidies/discounts on services:</strong> Provides direct financial incentive.<br>
                 <em>Rationale:</em> Incentives lower the personal cost and encourage uptake.
               </td>
               <td><input type="number" name="points_incentives" min="0" max="100" required></td>
@@ -112,12 +112,12 @@
             <tr>
               <td>
                 <strong>Exemption Policy</strong>
-                <span class="info-icon" data-tooltip="Determines who may opt out of the mandate. Stricter policies (e.g. medical exemptions only) boost uptake; broader exemptions provide flexibility but may lower overall coverage.">ℹ️</span>
+                <span class="info-icon" data-tooltip="Determines who may opt out of the mandate. Stricter policies (e.g., medical exemptions only) boost uptake; broader exemptions provide flexibility but may lower overall coverage.">ℹ️</span>
               </td>
               <td>
-                <strong>Medical exemptions only:</strong> Only those with verifiable health risks can opt out.<br>
-                <strong>Medical and religious exemptions:</strong> Allows opt-outs for both health and religious reasons.<br>
-                <strong>Medical, religious and broad personal belief exemptions:</strong> Permits a wide range of opt‑outs.<br>
+                <strong>Medical exemptions only:</strong> Only those with verified health risks can opt out.<br>
+                <strong>Medical and religious exemptions:</strong> Opt-out permitted for health and religious reasons.<br>
+                <strong>Medical, religious and broad personal belief exemptions:</strong> Allows a wide range of opt‑outs.<br>
                 <em>Rationale:</em> Balances fairness with maximizing vaccination uptake.
               </td>
               <td><input type="number" name="points_exemption" min="0" max="100" required></td>
@@ -130,8 +130,8 @@
               </td>
               <td>
                 <strong>Low (A$5):</strong> Minimal inconvenience.<br>
-                <strong>Moderate (A$20):</strong> Typical urban cost (e.g. moderate travel/waiting time).<br>
-                <strong>High (A$50):</strong> Significant cost (e.g. long travel or wage loss).<br>
+                <strong>Moderate (A$20):</strong> Typical cost in urban settings.<br>
+                <strong>High (A$50):</strong> Significant cost (e.g., long travel or wage loss).<br>
                 <em>Rationale:</em> Higher costs require additional incentives.
               </td>
               <td><input type="number" name="points_opportunity" min="0" max="100" required></td>
@@ -160,9 +160,9 @@
       <h2>Instructions</h2>
       <ul>
         <li>You will be presented with 9 choice tasks – one per page.</li>
-        <li>Each choice task compares two vaccine mandate options (A and B) with different attributes.</li>
+        <li>Each task compares two vaccine mandate options (A and B) with different attribute levels.</li>
         <li>Please read each task carefully and select your preferred option.</li>
-        <li>If given the option, indicate if your choice would remain the same if you could choose not to mandate vaccination.</li>
+        <li>If given the option, indicate if your choice would remain the same if you could opt out.</li>
         <li>All responses are mandatory.</li>
       </ul>
       <button type="button" class="next-button" id="instructions-next">Next</button>
