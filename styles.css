@@ -1,4 +1,4 @@
-/* General Stylses */
+/* General Styles */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: #f7f9fc;
@@ -25,7 +25,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-/* Slide navigation */
+/* Slide Navigation */
 .slide {
   display: none;
 }
@@ -34,7 +34,7 @@ h2 {
   display: block;
 }
 
-/* Table styles */
+/* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -51,7 +51,7 @@ th {
   background-color: #e0f7fa;
 }
 
-/* Info icon and tooltip */
+/* Info Icon and Tooltip */
 .info-icon {
   cursor: pointer;
   margin-left: 5px;
@@ -82,7 +82,13 @@ th {
   opacity: 1;
 }
 
-/* Next button */
+/* Tooltip for Icons */
+.icon-tooltip {
+  cursor: default;
+  margin-right: 5px;
+}
+
+/* Next Button */
 .next-button {
   background-color: #0a9396;
   color: #fff;
@@ -92,7 +98,7 @@ th {
   cursor: pointer;
   font-size: 16px;
   display: block;
-  margin: 0 auto;
+  margin: 20px auto 0;
 }
 
 .next-button:disabled {
@@ -100,14 +106,14 @@ th {
   cursor: not-allowed;
 }
 
-/* Scorecard total points display */
+/* Scorecard Total Points Display */
 #points-total {
   text-align: center;
   font-weight: bold;
   margin-top: 10px;
 }
 
-/* Task slide specific styles */
+/* Task Slide Specific Styles */
 .task-slide table {
   margin-top: 20px;
 }
@@ -128,7 +134,7 @@ th {
   cursor: pointer;
 }
 
-/* Visual icons */
+/* Visual Icons (for cost and progress) */
 .dollar-icon {
   font-weight: bold;
   font-size: 16px;
@@ -144,7 +150,7 @@ th {
   margin-right: 5px;
 }
 
-/* Thank-you message */
+/* Thank-you Message */
 .message {
   text-align: center;
   font-size: 18px;
