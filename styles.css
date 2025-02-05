@@ -1,6 +1,6 @@
-/* Generall stylihng */
+/* General Styles */
 body {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #f7f9fc;
   margin: 0;
   padding: 20px;
@@ -16,31 +16,25 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-h1 {
+h1, h2, h3 {
   text-align: center;
-  margin-bottom: 20px;
   color: #005f73;
 }
 
 h2 {
-  color: #0a9396;
+  margin-bottom: 10px;
 }
 
-/* Section styling */
-section {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-  background: #f1f1f1;
+/* Slide navigation */
+.slide {
+  display: none;
 }
 
-ul {
-  list-style: disc inside;
-  margin-left: 20px;
+.slide.active {
+  display: block;
 }
 
-/* Table styling */
+/* Table styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -50,24 +44,46 @@ table {
 th, td {
   border: 1px solid #ccc;
   padding: 10px;
-  text-align: left;
+  vertical-align: top;
 }
 
 th {
   background-color: #e0f7fa;
 }
 
-/* Scenario page (one per task) */
-.scenario-page {
-  display: none;
+/* Info icon and tooltip */
+.info-icon {
+  cursor: pointer;
+  margin-left: 5px;
+  color: #0a9396;
+  position: relative;
 }
 
-.scenario-page.active {
-  display: block;
+.info-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  width: 250px;
+  text-align: left;
 }
 
-/* Next/Submit button */
-button.next-button {
+.info-icon:hover::after {
+  opacity: 1;
+}
+
+/* Next button */
+.next-button {
   background-color: #0a9396;
   color: #fff;
   border: none;
@@ -75,41 +91,57 @@ button.next-button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  display: block;
+  margin: 0 auto;
 }
 
-button.next-button:disabled {
+.next-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-/* Questions fieldset styling */
-.questions fieldset {
+/* Scorecard total points display */
+#points-total {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Task slide specific styles */
+.task-slide table {
+  margin-top: 20px;
+}
+
+.task-slide th {
+  background-color: #d0ebff;
+}
+
+.task-slide .questions fieldset {
   border: none;
   margin: 10px 0;
   padding: 0;
 }
 
-.questions label {
+.task-slide .questions label {
   display: block;
   margin-bottom: 8px;
   cursor: pointer;
 }
 
-/* Coverage progress bar */
+/* Visual icons */
+.dollar-icon {
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 2px;
+  color: #2e7d32;
+}
+
 .progress-bar {
   border: 1px solid #aaa;
   width: 50px;
   height: 10px;
   background-color: #ddd;
   margin-right: 5px;
-}
-
-/* Dollar sign styling */
-.dollar-icon {
-  font-weight: bold;
-  font-size: 16px;
-  margin-right: 2px;
-  color: #2e7d32;
 }
 
 /* Thank-you message */
