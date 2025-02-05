@@ -1,0 +1,91 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+section {
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #eef;
+  border-radius: 5px;
+}
+
+ul {
+  list-style: disc inside;
+  margin-left: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+.attribute-value {
+  display: inline-flex;
+  align-items: center;
+}
+
+.attribute-value svg {
+  margin-right: 5px;
+}
+
+.block {
+  margin-bottom: 40px;
+  border: 2px solid #008080;
+  border-radius: 5px;
+  padding: 15px;
+  background: #fff;
+}
+
+.scenario {
+  margin-bottom: 25px;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.questions {
+  background: #e6f7ff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+fieldset {
+  border: none;
+  margin: 10px 0;
+  padding: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+/* Tooltip styling using title attribute is handled by the browser.
+   Additional hover effects can be added if needed. */
