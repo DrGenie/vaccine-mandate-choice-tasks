@@ -1,5 +1,77 @@
-// Tasks definition – four blocks with 9 scenarios each.
-// For demonstration, blocks 2, 3, and 4 duplicate block 1's scenarios.
+// Global slide navigation and response storage
+let currentSlideIndex = 0;
+const slides = [];  // All slide elements will be stored here
+const responses = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("survey-container");
+  // Gather static slides
+  const staticSlides = container.querySelectorAll(".slide");
+  staticSlides.forEach(slide => slides.push(slide));
+
+  // Next buttons on static slides
+  document.getElementById("scorecard-next").addEventListener("click", () => {
+    if (validateScorecard()) {
+      nextSlide();
+    }
+  });
+  document.getElementById("scenario-desc-next").addEventListener("click", () => {
+    nextSlide();
+  });
+  document.getElementById("instructions-next").addEventListener("click", () => {
+    nextSlide();
+  });
+
+  // Update total points as inputs change
+  const scorecardInputs = document.querySelectorAll("#scorecardForm input[type='number']");
+  scorecardInputs.forEach(input => {
+    input.addEventListener("input", updatePointsTotal);
+  });
+
+  // Generate task slides and append them
+  generateTaskSlides();
+
+  // Show the first slide
+  showSlide(currentSlideIndex);
+});
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle("active", i === index);
+  });
+}
+
+function nextSlide() {
+  if (currentSlideIndex < slides.length - 1) {
+    currentSlideIndex++;
+    showSlide(currentSlideIndex);
+  }
+}
+
+function updatePointsTotal() {
+  let total = 0;
+  const inputs = document.querySelectorAll("#scorecardForm input[type='number']");
+  inputs.forEach(input => {
+    total += Number(input.value) || 0;
+  });
+  document.getElementById("points-total").textContent = `Total Points Allocated: ${total} / 100`;
+}
+
+function validateScorecard() {
+  let total = 0;
+  const inputs = document.querySelectorAll("#scorecardForm input[type='number']");
+  inputs.forEach(input => {
+    total += Number(input.value) || 0;
+  });
+  if (total !== 100) {
+    alert("The total points allocated must equal 100. Please adjust your scores.");
+    return false;
+  }
+  return true;
+}
+
+/* --- Task Slides Generation --- */
+// Define tasks data (using block1 for demonstration; blocks 2–4 duplicate block1)
 const block1 = {
   block: 1,
   scenarios: [
@@ -177,127 +249,114 @@ const block1 = {
   ]
 };
 
-// For demonstration purposes, duplicate block1 for blocks 2–4.
-const tasks = [
+// Duplicate block1 for demonstration; randomly select one block
+const tasksBlocks = [
   block1,
   { block: 2, scenarios: block1.scenarios },
   { block: 3, scenarios: block1.scenarios },
   { block: 4, scenarios: block1.scenarios }
 ];
-
-// Randomly select one block so that each respondent gets 9 tasks.
-const availableBlocks = tasks;
-const selectedBlock = availableBlocks[Math.floor(Math.random() * availableBlocks.length)];
+const selectedBlock = tasksBlocks[Math.floor(Math.random() * tasksBlocks.length)];
 const scenarios = selectedBlock.scenarios;
 
-let currentScenarioIndex = 0;
-const responses = [];
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderScenario(currentScenarioIndex);
-});
-
-function renderScenario(index) {
-  const container = document.getElementById("choice-task-container");
-  container.innerHTML = ""; // clear previous content
-  const scenarioData = scenarios[index];
-
-  const scenarioDiv = document.createElement("div");
-  scenarioDiv.className = "scenario-page active";
-  scenarioDiv.id = `scenario-${scenarioData.scenario}`;
-
-  // Scenario Title
-  const title = document.createElement("h2");
-  title.textContent = `Scenario ${scenarioData.scenario}`;
-  scenarioDiv.appendChild(title);
-
-  // Table for attributes
-  const table = document.createElement("table");
-  const thead = document.createElement("thead");
-  const headerRow = document.createElement("tr");
-  ["Attribute", "Mandate A", "Mandate B"].forEach(text => {
-    const th = document.createElement("th");
-    th.textContent = text;
-    headerRow.appendChild(th);
+function generateTaskSlides() {
+  const taskContainer = document.getElementById("task-slides");
+  scenarios.forEach((scenarioData, idx) => {
+    const taskSlide = document.createElement("div");
+    taskSlide.className = "slide task-slide";
+    taskSlide.id = `task-slide-${scenarioData.scenario}`;
+    
+    const title = document.createElement("h2");
+    title.textContent = `Scenario ${scenarioData.scenario}`;
+    taskSlide.appendChild(title);
+    
+    // Create comparison table
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    ["Attribute", "Vaccine Mandate A", "Vaccine Mandate B"].forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    const tbody = document.createElement("tbody");
+    const attributes = ["scope", "exemption", "threshold", "coverage", "incentives", "cost"];
+    attributes.forEach(attr => {
+      const row = document.createElement("tr");
+      
+      const tdAttr = document.createElement("td");
+      tdAttr.textContent = capitalize(attr);
+      tdAttr.title = getAttributeDescription(attr);
+      row.appendChild(tdAttr);
+      
+      const tdA = document.createElement("td");
+      tdA.innerHTML = getIcon(attr, scenarioData.mandateA[attr]) + " " + scenarioData.mandateA[attr];
+      row.appendChild(tdA);
+      
+      const tdB = document.createElement("td");
+      tdB.innerHTML = getIcon(attr, scenarioData.mandateB[attr]) + " " + scenarioData.mandateB[attr];
+      row.appendChild(tdB);
+      
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+    taskSlide.appendChild(table);
+    
+    // Form for choice questions
+    const form = document.createElement("form");
+    form.id = `form-task-${scenarioData.scenario}`;
+    form.innerHTML = `
+      <div class="questions">
+        <fieldset required>
+          <legend>Which vaccine mandate option would you prefer? (pick only one option)</legend>
+          <label>
+            <input type="radio" name="choice" value="A" required>
+            I prefer Vaccine Mandate A
+          </label>
+          <label>
+            <input type="radio" name="choice" value="B" required>
+            I prefer Vaccine Mandate B
+          </label>
+        </fieldset>
+        <fieldset required>
+          <legend>If you have the option not to choose any of these vaccine mandates, will your choice remain the same?</legend>
+          <label>
+            <input type="radio" name="not_choose" value="same" required>
+            Yes, my choice will remain the same.
+          </label>
+          <label>
+            <input type="radio" name="not_choose" value="change" required>
+            No, my choice will change, now I prefer not to choose any of these vaccine mandates.
+          </label>
+        </fieldset>
+      </div>
+    `;
+    taskSlide.appendChild(form);
+    
+    // Next/Submit button
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "next-button";
+    nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
+    nextBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      saveResponse(scenarioData.scenario, new FormData(form));
+      nextSlide();
+      if (idx === scenarios.length - 1) {
+        submitResponses();
+      }
+    });
+    taskSlide.appendChild(nextBtn);
+    
+    taskContainer.appendChild(taskSlide);
+    slides.push(taskSlide);
   });
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  const tbody = document.createElement("tbody");
-  const attributes = ["scope", "exemption", "threshold", "coverage", "incentives", "cost"];
-  attributes.forEach(attr => {
-    const row = document.createElement("tr");
-
-    const tdAttr = document.createElement("td");
-    tdAttr.textContent = capitalize(attr);
-    tdAttr.title = getAttributeDescription(attr);
-    row.appendChild(tdAttr);
-
-    const tdA = document.createElement("td");
-    tdA.innerHTML = getIcon(attr, scenarioData.mandateA[attr]) + " " + scenarioData.mandateA[attr];
-    row.appendChild(tdA);
-
-    const tdB = document.createElement("td");
-    tdB.innerHTML = getIcon(attr, scenarioData.mandateB[attr]) + " " + scenarioData.mandateB[attr];
-    row.appendChild(tdB);
-
-    tbody.appendChild(row);
-  });
-  table.appendChild(tbody);
-  scenarioDiv.appendChild(table);
-
-  // Form with required questions
-  const form = document.createElement("form");
-  form.id = `form-${scenarioData.scenario}`;
-  form.innerHTML = `
-    <div class="questions">
-      <fieldset required>
-        <legend>Which vaccine mandate option would you prefer? (pick only one option)</legend>
-        <label>
-          <input type="radio" name="choice" value="A" required>
-          I prefer Vaccine Mandate A
-        </label>
-        <label>
-          <input type="radio" name="choice" value="B" required>
-          I prefer Vaccine Mandate B
-        </label>
-      </fieldset>
-      <fieldset required>
-        <legend>If you have the option not to choose any of these vaccine mandates, will your choice remain the same?</legend>
-        <label>
-          <input type="radio" name="not_choose" value="same" required>
-          Yes, my choice will remain the same.
-        </label>
-        <label>
-          <input type="radio" name="not_choose" value="change" required>
-          No, my choice will change, now I prefer not to choose any of these vaccine mandates.
-        </label>
-      </fieldset>
-    </div>
-  `;
-  scenarioDiv.appendChild(form);
-
-  // Next/Submit button
-  const nextButton = document.createElement("button");
-  nextButton.textContent = (index === scenarios.length - 1) ? "Submit" : "Next";
-  nextButton.className = "next-button";
-  nextButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-    saveResponse(scenarioData.scenario, new FormData(form));
-    currentScenarioIndex++;
-    if (currentScenarioIndex < scenarios.length) {
-      renderScenario(currentScenarioIndex);
-    } else {
-      submitResponses();
-    }
-  });
-  scenarioDiv.appendChild(nextButton);
-
-  container.appendChild(scenarioDiv);
 }
 
 function saveResponse(scenarioNumber, formData) {
@@ -312,19 +371,17 @@ function saveResponse(scenarioNumber, formData) {
 }
 
 function submitResponses() {
-  // Prepare email content
   let emailContent = "Survey Responses:\n";
   responses.forEach(resp => {
     emailContent += `Block: ${resp.block}, Scenario: ${resp.scenario}, Choice: ${resp.choice}, Not Choose: ${resp.not_choose}\n`;
   });
-
+  
   const templateParams = {
     to_email: "mesfin.genie@newcastle.edu.au",
     subject: "Vaccine Mandate Survey Responses",
     message: emailContent
   };
-
-  // Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID with your EmailJS service/template IDs
+  
   emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
     .then((response) => {
       showThankYou();
@@ -335,7 +392,7 @@ function submitResponses() {
 }
 
 function showThankYou() {
-  const container = document.getElementById("choice-task-container");
+  const container = document.getElementById("survey-container");
   container.innerHTML = `<div class="message">Thank you for completing the survey!</div>`;
 }
 
@@ -349,7 +406,7 @@ function getAttributeDescription(attr) {
     exemption: "2 = Medical and religious exemptions; 3 = Medical, religious, and broad personal belief; 1 = Medical exemptions only",
     threshold: "2 = 100 cases/100k with 15% increase; 3 = 200 cases/100k with 20% increase; 1 = 50 cases/100k with 10% increase",
     coverage: "2 = Moderate (70%); 3 = High (90%); 1 = Low (50%)",
-    incentives: "2 = Paid time off (1–3 days); 3 = 10% discount; 1 = None",
+    incentives: "2 = Paid time off (1–3 days); 3 = 10% discount; 1 = No incentives",
     cost: "2 = Moderate (AUD20); 3 = High (AUD50); 4 = No cost (AUD0); 1 = Low (AUD5)"
   };
   return desc[attr] || "";
@@ -392,7 +449,7 @@ function getIcon(attr, value) {
             </svg>`;
   }
   if (attr === "incentives") {
-    if (value.includes("None")) {
+    if (value.includes("No incentives")) {
       return `<svg width="16" height="16"><rect width="12" height="12" x="2" y="2" fill="#d3d3d3"/></svg>`;
     } else if (value.includes("Paid time off")) {
       return `<svg width="16" height="16"><rect width="12" height="12" x="2" y="2" fill="#a1cfff"/></svg>`;
@@ -401,7 +458,6 @@ function getIcon(attr, value) {
     }
   }
   if (attr === "cost") {
-    // Display dollar signs based on cost level
     if (value.includes("AUD5")) {
       return `<span class="dollar-icon">$</span>`;
     } else if (value.includes("AUD20")) {
