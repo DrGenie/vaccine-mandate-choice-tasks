@@ -1,35 +1,26 @@
-// Global slide navigation and response storage
+// Global variables for slide navigation, response storage, and timing
 let currentSlideIndex = 0;
-const slides = [];  // Will hold all slide elements
-const responses = [];
+let slides = [];
+let responses = [];
+let taskStartTime = 0; // To record response time for each task
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("survey-container");
-  // Add static slides to the slides array
-  const staticSlides = container.querySelectorAll(".slide");
-  staticSlides.forEach(slide => slides.push(slide));
+  // Gather all static slides (the ones already in the HTML)
+  slides = Array.from(document.querySelectorAll(".slide"));
 
-  // Next buttons for static slides
-  document.getElementById("scorecard-next").addEventListener("click", () => {
-    if (validateScorecard()) {
-      nextSlide();
-    }
+  // Attach next/back button listeners for static slides
+  document.querySelectorAll(".next-button").forEach(btn => {
+    btn.addEventListener("click", handleNext);
   });
-  document.getElementById("scenario-desc-next").addEventListener("click", () => {
-    nextSlide();
-  });
-  document.getElementById("instructions-next").addEventListener("click", () => {
-    nextSlide();
+  document.querySelectorAll(".back-button").forEach(btn => {
+    btn.addEventListener("click", handleBack);
   });
 
-  // Update total points as inputs change
-  const scorecardInputs = document.querySelectorAll("#scorecardForm input[type='number']");
-  scorecardInputs.forEach(input => {
-    input.addEventListener("input", updatePointsTotal);
-  });
-
-  // Generate task slides dynamically
+  // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
+
+  // Refresh slides array after dynamic slides are appended
+  slides = Array.from(document.querySelectorAll(".slide"));
 
   // Show the first slide
   showSlide(currentSlideIndex);
@@ -39,6 +30,37 @@ function showSlide(index) {
   slides.forEach((slide, i) => {
     slide.classList.toggle("active", i === index);
   });
+  // If the current slide is a dynamic task slide, record its start time
+  if (slides[index].classList.contains("task-slide")) {
+    taskStartTime = Date.now();
+  }
+}
+
+function handleNext(e) {
+  e.preventDefault();
+  // If on a dynamic task slide, record response time and save responses
+  const currentSlide = slides[currentSlideIndex];
+  if (currentSlide.classList.contains("task-slide")) {
+    const form = currentSlide.querySelector("form");
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    const responseTime = Date.now() - taskStartTime;
+    saveResponse(form, responseTime);
+  }
+  // If last dynamic task slide, proceed to thank-you slide and submit responses
+  if (currentSlideIndex === slides.length - 2) { // second-to-last is last task slide
+    nextSlide();
+    submitResponses();
+  } else {
+    nextSlide();
+  }
+}
+
+function handleBack(e) {
+  e.preventDefault();
+  prevSlide();
 }
 
 function nextSlide() {
@@ -48,219 +70,196 @@ function nextSlide() {
   }
 }
 
-function updatePointsTotal() {
-  let total = 0;
-  const inputs = document.querySelectorAll("#scorecardForm input[type='number']");
-  inputs.forEach(input => {
-    total += Number(input.value) || 0;
-  });
-  document.getElementById("points-total").textContent = `Total Points Allocated: ${total} / 100`;
-}
-
-function validateScorecard() {
-  let total = 0;
-  const inputs = document.querySelectorAll("#scorecardForm input[type='number']");
-  inputs.forEach(input => {
-    total += Number(input.value) || 0;
-  });
-  if (total !== 100) {
-    alert("The total points allocated must equal 100. Please adjust your scores.");
-    return false;
+function prevSlide() {
+  if (currentSlideIndex > 0) {
+    currentSlideIndex--;
+    showSlide(currentSlideIndex);
   }
-  return true;
 }
-
-/* --- Task Slides Generation --- */
-// Define tasks data (for demonstration, using block1 for all)
-const block1 = {
-  block: 1,
-  scenarios: [
-    {
-      scenario: 1,
-      mandateA: {
-        scope: "High-risk occupations only",
-        exemption: "Medical exemptions only",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "No incentives",
-        cost: "Low opportunity cost (AUD5)"
-      },
-      mandateB: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical and religious exemptions",
-        threshold: "100 cases per 100k, 15% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "Moderate opportunity cost (AUD20)"
-      }
-    },
-    {
-      scenario: 2,
-      mandateA: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical exemptions only",
-        threshold: "200 cases per 100k, 20% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "10% discount on government services",
-        cost: "High opportunity cost (AUD50)"
-      },
-      mandateB: {
-        scope: "High-risk occupations only",
-        exemption: "Medical and religious exemptions",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "No incentives",
-        cost: "Low opportunity cost (AUD5)"
-      }
-    },
-    {
-      scenario: 3,
-      mandateA: {
-        scope: "High-risk occupations only",
-        exemption: "Medical and religious exemptions",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "Low opportunity cost (AUD5)"
-      },
-      mandateB: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical exemptions only",
-        threshold: "100 cases per 100k, 15% increase",
-        coverage: "High vaccine coverage (90%)",
-        incentives: "No incentives",
-        cost: "Low opportunity cost (AUD5)"
-      }
-    },
-    // ... add scenarios 4 through 9 similarly
-    {
-      scenario: 4,
-      mandateA: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical and religious exemptions",
-        threshold: "100 cases per 100k, 15% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "High opportunity cost (AUD50)"
-      },
-      mandateB: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical exemptions only",
-        threshold: "200 cases per 100k, 20% increase",
-        coverage: "High vaccine coverage (90%)",
-        incentives: "10% discount on government services",
-        cost: "Moderate opportunity cost (AUD20)"
-      }
-    },
-    {
-      scenario: 5,
-      mandateA: {
-        scope: "High-risk occupations only",
-        exemption: "Medical, religious, and broad personal belief",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "Moderate opportunity cost (AUD20)"
-      },
-      mandateB: {
-        scope: "High-risk occupations only",
-        exemption: "Medical and religious exemptions",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "No incentives",
-        cost: "Low opportunity cost (AUD5)"
-      }
-    },
-    {
-      scenario: 6,
-      mandateA: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical exemptions only",
-        threshold: "100 cases per 100k, 15% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "No incentives",
-        cost: "Moderate opportunity cost (AUD20)"
-      },
-      mandateB: {
-        scope: "High-risk occupations only",
-        exemption: "Medical, religious, and broad personal belief",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "High opportunity cost (AUD50)"
-      }
-    },
-    {
-      scenario: 7,
-      mandateA: {
-        scope: "High-risk occupations only",
-        exemption: "Medical and religious exemptions",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "10% discount on government services",
-        cost: "Low opportunity cost (AUD5)"
-      },
-      mandateB: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical and religious exemptions",
-        threshold: "200 cases per 100k, 20% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "No opportunity cost (AUD0)"
-      }
-    },
-    {
-      scenario: 8,
-      mandateA: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical exemptions only",
-        threshold: "200 cases per 100k, 20% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "10% discount on government services",
-        cost: "Low opportunity cost (AUD5)"
-      },
-      mandateB: {
-        scope: "All occupations and public spaces",
-        exemption: "Medical and religious exemptions",
-        threshold: "100 cases per 100k, 15% increase",
-        coverage: "High vaccine coverage (90%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "High opportunity cost (AUD50)"
-      }
-    },
-    {
-      scenario: 9,
-      mandateA: {
-        scope: "High-risk occupations only",
-        exemption: "Medical exemptions only",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Low vaccine coverage (50%)",
-        incentives: "Paid time off for vaccination (1–3 days)",
-        cost: "Low opportunity cost (AUD5)"
-      },
-      mandateB: {
-        scope: "High-risk occupations only",
-        exemption: "Medical, religious, and broad personal belief",
-        threshold: "50 cases per 100k, 10% increase",
-        coverage: "Moderate vaccine coverage (70%)",
-        incentives: "No incentives",
-        cost: "Low opportunity cost (AUD5)"
-      }
-    }
-  ]
-};
-
-// For demonstration, duplicate block1 for blocks 2–4 and randomly select one block
-const tasksBlocks = [
-  block1,
-  { block: 2, scenarios: block1.scenarios },
-  { block: 3, scenarios: block1.scenarios },
-  { block: 4, scenarios: block1.scenarios }
-];
-const selectedBlock = tasksBlocks[Math.floor(Math.random() * tasksBlocks.length)];
-const scenarios = selectedBlock.scenarios;
 
 function generateTaskSlides() {
+  // Define tasks data (using one block for demonstration)
+  const block1 = {
+    block: 1,
+    scenarios: [
+      {
+        scenario: 1,
+        mandateA: {
+          scope: "High-risk occupations only",
+          exemption: "Medical exemptions only",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "No incentives",
+          cost: "Low opportunity cost (AUD5)"
+        },
+        mandateB: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical and religious exemptions",
+          threshold: "100 cases per 100k, 15% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "Moderate opportunity cost (AUD20)"
+        }
+      },
+      {
+        scenario: 2,
+        mandateA: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical exemptions only",
+          threshold: "200 cases per 100k, 20% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "10% discount on government services",
+          cost: "High opportunity cost (AUD50)"
+        },
+        mandateB: {
+          scope: "High-risk occupations only",
+          exemption: "Medical and religious exemptions",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "No incentives",
+          cost: "Low opportunity cost (AUD5)"
+        }
+      },
+      {
+        scenario: 3,
+        mandateA: {
+          scope: "High-risk occupations only",
+          exemption: "Medical and religious exemptions",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "Low opportunity cost (AUD5)"
+        },
+        mandateB: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical exemptions only",
+          threshold: "100 cases per 100k, 15% increase",
+          coverage: "High vaccine coverage (90%)",
+          incentives: "No incentives",
+          cost: "Low opportunity cost (AUD5)"
+        }
+      },
+      {
+        scenario: 4,
+        mandateA: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical and religious exemptions",
+          threshold: "100 cases per 100k, 15% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "High opportunity cost (AUD50)"
+        },
+        mandateB: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical exemptions only",
+          threshold: "200 cases per 100k, 20% increase",
+          coverage: "High vaccine coverage (90%)",
+          incentives: "10% discount on government services",
+          cost: "Moderate opportunity cost (AUD20)"
+        }
+      },
+      {
+        scenario: 5,
+        mandateA: {
+          scope: "High-risk occupations only",
+          exemption: "Medical, religious, and broad personal belief",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "Moderate opportunity cost (AUD20)"
+        },
+        mandateB: {
+          scope: "High-risk occupations only",
+          exemption: "Medical and religious exemptions",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "No incentives",
+          cost: "Low opportunity cost (AUD5)"
+        }
+      },
+      {
+        scenario: 6,
+        mandateA: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical exemptions only",
+          threshold: "100 cases per 100k, 15% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "No incentives",
+          cost: "Moderate opportunity cost (AUD20)"
+        },
+        mandateB: {
+          scope: "High-risk occupations only",
+          exemption: "Medical, religious, and broad personal belief",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "High opportunity cost (AUD50)"
+        }
+      },
+      {
+        scenario: 7,
+        mandateA: {
+          scope: "High-risk occupations only",
+          exemption: "Medical and religious exemptions",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "10% discount on government services",
+          cost: "Low opportunity cost (AUD5)"
+        },
+        mandateB: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical and religious exemptions",
+          threshold: "200 cases per 100k, 20% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "No opportunity cost (AUD0)"
+        }
+      },
+      {
+        scenario: 8,
+        mandateA: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical exemptions only",
+          threshold: "200 cases per 100k, 20% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "10% discount on government services",
+          cost: "Low opportunity cost (AUD5)"
+        },
+        mandateB: {
+          scope: "All occupations and public spaces",
+          exemption: "Medical and religious exemptions",
+          threshold: "100 cases per 100k, 15% increase",
+          coverage: "High vaccine coverage (90%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "High opportunity cost (AUD50)"
+        }
+      },
+      {
+        scenario: 9,
+        mandateA: {
+          scope: "High-risk occupations only",
+          exemption: "Medical exemptions only",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Low vaccine coverage (50%)",
+          incentives: "Paid time off for vaccination (1–3 days)",
+          cost: "Low opportunity cost (AUD5)"
+        },
+        mandateB: {
+          scope: "High-risk occupations only",
+          exemption: "Medical, religious, and broad personal belief",
+          threshold: "50 cases per 100k, 10% increase",
+          coverage: "Moderate vaccine coverage (70%)",
+          incentives: "No incentives",
+          cost: "Low opportunity cost (AUD5)"
+        }
+      }
+    ]
+  };
+
+  // For demonstration, use block1
+  const selectedBlock = block1;
+  const scenarios = selectedBlock.scenarios;
+  
   const taskContainer = document.getElementById("task-slides");
   scenarios.forEach((scenarioData, idx) => {
     const taskSlide = document.createElement("div");
@@ -271,7 +270,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create comparison table with detailed tooltips for each attribute level
+    // Create a comparison table with tooltips on every attribute
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -284,7 +283,7 @@ function generateTaskSlides() {
     table.appendChild(thead);
     
     const tbody = document.createElement("tbody");
-    const attributes = ["scope", "exemption", "threshold", "coverage", "incentives", "cost"];
+    const attributes = ["scope", "threshold", "coverage", "incentives", "exemption", "cost"];
     attributes.forEach(attr => {
       const row = document.createElement("tr");
       
@@ -306,7 +305,7 @@ function generateTaskSlides() {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
     
-    // Form for choice questions
+    // Form for the choice questions
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.scenario}`;
     form.innerHTML = `
@@ -337,44 +336,59 @@ function generateTaskSlides() {
     `;
     taskSlide.appendChild(form);
     
-    // Next/Submit button
+    // Navigation buttons (Back and Next)
+    const navDiv = document.createElement("div");
+    navDiv.className = "navigation-buttons";
+    const backBtn = document.createElement("button");
+    backBtn.className = "back-button";
+    backBtn.textContent = "Back";
+    backBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      prevSlide();
+    });
+    navDiv.appendChild(backBtn);
+    
     const nextBtn = document.createElement("button");
     nextBtn.className = "next-button";
     nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
     nextBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      const form = taskSlide.querySelector("form");
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
       }
-      saveResponse(scenarioData.scenario, new FormData(form));
+      // Record response time for this task
+      const responseTime = Date.now() - taskStartTime;
+      saveResponse(form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
         submitResponses();
       }
     });
-    taskSlide.appendChild(nextBtn);
+    navDiv.appendChild(nextBtn);
     
+    taskSlide.appendChild(navDiv);
     taskContainer.appendChild(taskSlide);
     slides.push(taskSlide);
   });
 }
 
-function saveResponse(scenarioNumber, formData) {
-  const choice = formData.get("choice");
-  const notChoose = formData.get("not_choose");
+function saveResponse(form, responseTime) {
+  const choice = form.get("choice");
+  const notChoose = form.get("not_choose");
   responses.push({
-    block: selectedBlock.block,
-    scenario: scenarioNumber,
+    scenario: form.id.split("-").pop(),
     choice: choice,
-    not_choose: notChoose
+    not_choose: notChoose,
+    responseTime: responseTime
   });
 }
 
 function submitResponses() {
   let emailContent = "Survey Responses:\n";
   responses.forEach(resp => {
-    emailContent += `Block: ${resp.block}, Scenario: ${resp.scenario}, Choice: ${resp.choice}, Not Choose: ${resp.not_choose}\n`;
+    emailContent += `Scenario: ${resp.scenario}, Choice: ${resp.choice}, Not Choose: ${resp.not_choose}, Response Time: ${resp.responseTime} ms\n`;
   });
   
   const templateParams = {
@@ -384,7 +398,7 @@ function submitResponses() {
   };
   
   emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
-    .then((response) => {
+    .then((result) => {
       showThankYou();
     }, (error) => {
       console.error("Submission failed:", error);
@@ -404,10 +418,10 @@ function capitalize(str) {
 function getAttributeDescription(attr) {
   const desc = {
     scope: "Defines who must be vaccinated. 'High-risk occupations only' targets critical roles; 'All occupations and public spaces' applies universally.",
-    exemption: "Determines who may opt out: Medical exemptions only, Medical and religious exemptions, or Medical, religious and broad personal belief exemptions.",
     threshold: "Sets the outbreak severity (cases per 100k and weekly increase) required to trigger the mandate.",
     coverage: "Specifies the vaccination percentage required to lift the mandate.",
     incentives: "Indicates whether any incentives (e.g., paid time off, discounts) are provided to encourage vaccination.",
+    exemption: "Determines who may opt out: Medical exemptions only, Medical and religious exemptions, or Medical, religious and broad personal belief exemptions.",
     cost: "Represents the opportunity cost of compliance. Lower costs are less burdensome."
   };
   return desc[attr] || "";
@@ -416,18 +430,9 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Targets individuals in high-risk roles such as healthcare and emergency services.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Targets individuals in critical roles such as healthcare and emergency services.">⚠️</span>`;
     } else {
       return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
-    }
-  }
-  if (attr === "exemption") {
-    if (value.includes("Medical exemptions only")) {
-      return `<span class="icon-tooltip" title="Medical exemptions only: Only those with verified health risks can opt out.">🩺</span>`;
-    } else if (value.includes("Medical and religious exemptions")) {
-      return `<span class="icon-tooltip" title="Medical and religious exemptions: Permits opt-out for health and religious reasons.">🩺🙏</span>`;
-    } else if (value.toLowerCase().includes("broad")) {
-      return `<span class="icon-tooltip" title="Medical, religious and broad personal belief exemptions: Allows a wide range of opt-out reasons.">🩺🙏💡</span>`;
     }
   }
   if (attr === "threshold") {
@@ -456,6 +461,15 @@ function getIcon(attr, value) {
       return `<span class="icon-tooltip" title="Paid time off for vaccination: Compensates for lost work time.">🕒</span>`;
     } else if (value.includes("10% discount")) {
       return `<span class="icon-tooltip" title="10% discount on government services: Provides a financial incentive.">💸</span>`;
+    }
+  }
+  if (attr === "exemption") {
+    if (value.includes("Medical exemptions only")) {
+      return `<span class="icon-tooltip" title="Medical exemptions only: Only those with verified health risks can opt out.">🩺</span>`;
+    } else if (value.includes("Medical and religious exemptions")) {
+      return `<span class="icon-tooltip" title="Medical and religious exemptions: Permits opt-out for health and religious reasons.">🩺🙏</span>`;
+    } else if (value.toLowerCase().includes("broad")) {
+      return `<span class="icon-tooltip" title="Medical, religious and broad personal belief exemptions: Allows a wide range of opt-out reasons.">🩺🙏💡</span>`;
     }
   }
   if (attr === "cost") {
