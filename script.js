@@ -1,20 +1,30 @@
-// Global variables for slide naavigation, response storage, and timing
+// Global variables for slide navigation, response storage, and timing
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
-let taskStartTime = 0; // To record response time for each task
+let taskStartTime = 0; // Record start time for each task slide
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Gather all static slides (the ones already in the HTML)
-  slides = Array.from(document.querySelectorAll(".slide"));
+  // Attach event listeners for static slides individually
+  document.getElementById("intro-next").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("tutorial-next-2").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("tutorial-next-3").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("tutorial-next-4").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("tutorial-next-5").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("tutorial-next-6").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("tutorial-next-7").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("example-next").addEventListener("click", () => { nextSlide(); });
+  document.getElementById("instr-back").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("start-tasks").addEventListener("click", () => { nextSlide(); });
 
-  // Attach next/back button listeners for static slides
-  document.querySelectorAll(".next-button").forEach(btn => {
-    btn.addEventListener("click", handleNext);
-  });
-  document.querySelectorAll(".back-button").forEach(btn => {
-    btn.addEventListener("click", handleBack);
-  });
+  // Attach back button listeners for static slides (if present)
+  document.getElementById("tutorial-back-2").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("tutorial-back-3").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("tutorial-back-4").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("tutorial-back-5").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("tutorial-back-6").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("tutorial-back-7").addEventListener("click", () => { prevSlide(); });
+  document.getElementById("example-back").addEventListener("click", () => { prevSlide(); });
 
   // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
@@ -30,37 +40,10 @@ function showSlide(index) {
   slides.forEach((slide, i) => {
     slide.classList.toggle("active", i === index);
   });
-  // If the current slide is a dynamic task slide, record its start time
+  // If the current slide is a task slide, record its start time
   if (slides[index].classList.contains("task-slide")) {
     taskStartTime = Date.now();
   }
-}
-
-function handleNext(e) {
-  e.preventDefault();
-  // If on a dynamic task slide, record response time and save responses
-  const currentSlide = slides[currentSlideIndex];
-  if (currentSlide.classList.contains("task-slide")) {
-    const form = currentSlide.querySelector("form");
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-    const responseTime = Date.now() - taskStartTime;
-    saveResponse(form, responseTime);
-  }
-  // If last dynamic task slide, proceed to thank-you slide and submit responses
-  if (currentSlideIndex === slides.length - 2) { // second-to-last is last task slide
-    nextSlide();
-    submitResponses();
-  } else {
-    nextSlide();
-  }
-}
-
-function handleBack(e) {
-  e.preventDefault();
-  prevSlide();
 }
 
 function nextSlide() {
@@ -86,18 +69,18 @@ function generateTaskSlides() {
         scenario: 1,
         mandateA: {
           scope: "High-risk occupations only",
-          exemption: "Medical exemptions only",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "No incentives",
+          exemption: "Medical exemptions only",
           cost: "Low opportunity cost (AUD5)"
         },
         mandateB: {
           scope: "All occupations and public spaces",
-          exemption: "Medical and religious exemptions",
           threshold: "100 cases per 100k, 15% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical and religious exemptions",
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
@@ -105,18 +88,18 @@ function generateTaskSlides() {
         scenario: 2,
         mandateA: {
           scope: "All occupations and public spaces",
-          exemption: "Medical exemptions only",
           threshold: "200 cases per 100k, 20% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "10% discount on government services",
+          exemption: "Medical exemptions only",
           cost: "High opportunity cost (AUD50)"
         },
         mandateB: {
           scope: "High-risk occupations only",
-          exemption: "Medical and religious exemptions",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "No incentives",
+          exemption: "Medical and religious exemptions",
           cost: "Low opportunity cost (AUD5)"
         }
       },
@@ -124,18 +107,18 @@ function generateTaskSlides() {
         scenario: 3,
         mandateA: {
           scope: "High-risk occupations only",
-          exemption: "Medical and religious exemptions",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical and religious exemptions",
           cost: "Low opportunity cost (AUD5)"
         },
         mandateB: {
           scope: "All occupations and public spaces",
-          exemption: "Medical exemptions only",
           threshold: "100 cases per 100k, 15% increase",
           coverage: "High vaccine coverage (90%)",
           incentives: "No incentives",
+          exemption: "Medical exemptions only",
           cost: "Low opportunity cost (AUD5)"
         }
       },
@@ -143,18 +126,18 @@ function generateTaskSlides() {
         scenario: 4,
         mandateA: {
           scope: "All occupations and public spaces",
-          exemption: "Medical and religious exemptions",
           threshold: "100 cases per 100k, 15% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical and religious exemptions",
           cost: "High opportunity cost (AUD50)"
         },
         mandateB: {
           scope: "All occupations and public spaces",
-          exemption: "Medical exemptions only",
           threshold: "200 cases per 100k, 20% increase",
           coverage: "High vaccine coverage (90%)",
           incentives: "10% discount on government services",
+          exemption: "Medical exemptions only",
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
@@ -162,18 +145,18 @@ function generateTaskSlides() {
         scenario: 5,
         mandateA: {
           scope: "High-risk occupations only",
-          exemption: "Medical, religious, and broad personal belief",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical, religious, and broad personal belief",
           cost: "Moderate opportunity cost (AUD20)"
         },
         mandateB: {
           scope: "High-risk occupations only",
-          exemption: "Medical and religious exemptions",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "No incentives",
+          exemption: "Medical and religious exemptions",
           cost: "Low opportunity cost (AUD5)"
         }
       },
@@ -181,18 +164,18 @@ function generateTaskSlides() {
         scenario: 6,
         mandateA: {
           scope: "All occupations and public spaces",
-          exemption: "Medical exemptions only",
           threshold: "100 cases per 100k, 15% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "No incentives",
+          exemption: "Medical exemptions only",
           cost: "Moderate opportunity cost (AUD20)"
         },
         mandateB: {
           scope: "High-risk occupations only",
-          exemption: "Medical, religious, and broad personal belief",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical, religious, and broad personal belief",
           cost: "High opportunity cost (AUD50)"
         }
       },
@@ -200,18 +183,18 @@ function generateTaskSlides() {
         scenario: 7,
         mandateA: {
           scope: "High-risk occupations only",
-          exemption: "Medical and religious exemptions",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "10% discount on government services",
+          exemption: "Medical and religious exemptions",
           cost: "Low opportunity cost (AUD5)"
         },
         mandateB: {
           scope: "All occupations and public spaces",
-          exemption: "Medical and religious exemptions",
           threshold: "200 cases per 100k, 20% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical and religious exemptions",
           cost: "No opportunity cost (AUD0)"
         }
       },
@@ -219,18 +202,18 @@ function generateTaskSlides() {
         scenario: 8,
         mandateA: {
           scope: "All occupations and public spaces",
-          exemption: "Medical exemptions only",
           threshold: "200 cases per 100k, 20% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "10% discount on government services",
+          exemption: "Medical exemptions only",
           cost: "Low opportunity cost (AUD5)"
         },
         mandateB: {
           scope: "All occupations and public spaces",
-          exemption: "Medical and religious exemptions",
           threshold: "100 cases per 100k, 15% increase",
           coverage: "High vaccine coverage (90%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical and religious exemptions",
           cost: "High opportunity cost (AUD50)"
         }
       },
@@ -238,28 +221,26 @@ function generateTaskSlides() {
         scenario: 9,
         mandateA: {
           scope: "High-risk occupations only",
-          exemption: "Medical exemptions only",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Low vaccine coverage (50%)",
           incentives: "Paid time off for vaccination (1–3 days)",
+          exemption: "Medical exemptions only",
           cost: "Low opportunity cost (AUD5)"
         },
         mandateB: {
           scope: "High-risk occupations only",
-          exemption: "Medical, religious, and broad personal belief",
           threshold: "50 cases per 100k, 10% increase",
           coverage: "Moderate vaccine coverage (70%)",
           incentives: "No incentives",
+          exemption: "Medical, religious, and broad personal belief",
           cost: "Low opportunity cost (AUD5)"
         }
       }
     ]
   };
 
-  // For demonstration, use block1
-  const selectedBlock = block1;
-  const scenarios = selectedBlock.scenarios;
-  
+  // For this demo, use block1 and iterate through its scenarios
+  const scenarios = block1.scenarios;
   const taskContainer = document.getElementById("task-slides");
   scenarios.forEach((scenarioData, idx) => {
     const taskSlide = document.createElement("div");
@@ -270,7 +251,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create a comparison table with tooltips on every attribute
+    // Create a comparison table with tooltips for each attribute
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -283,6 +264,7 @@ function generateTaskSlides() {
     table.appendChild(thead);
     
     const tbody = document.createElement("tbody");
+    // Order the six attributes as required
     const attributes = ["scope", "threshold", "coverage", "incentives", "exemption", "cost"];
     attributes.forEach(attr => {
       const row = document.createElement("tr");
@@ -305,7 +287,7 @@ function generateTaskSlides() {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
     
-    // Form for the choice questions
+    // Create a form for the choice questions
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.scenario}`;
     form.innerHTML = `
@@ -329,7 +311,7 @@ function generateTaskSlides() {
           </label>
           <label>
             <input type="radio" name="not_choose" value="change" required>
-            No, my choice will change, now I prefer not to choose any of these vaccine mandates.
+            No, my choice will change.
           </label>
         </fieldset>
       </div>
@@ -358,7 +340,6 @@ function generateTaskSlides() {
         form.reportValidity();
         return;
       }
-      // Record response time for this task
       const responseTime = Date.now() - taskStartTime;
       saveResponse(form, responseTime);
       nextSlide();
@@ -370,7 +351,6 @@ function generateTaskSlides() {
     
     taskSlide.appendChild(navDiv);
     taskContainer.appendChild(taskSlide);
-    slides.push(taskSlide);
   });
 }
 
@@ -449,7 +429,7 @@ function getIcon(attr, value) {
     if (value.includes("50")) percentage = 50;
     else if (value.includes("70")) percentage = 70;
     else if (value.includes("90")) percentage = 90;
-    return `<span class="icon-tooltip" title="${value}"><svg width="50" height="10">
+    return `<span class="icon-tooltip" title="${value}"><svg class="progress-svg" viewBox="0 0 50 10">
               <rect width="50" height="10" fill="#ddd"/>
               <rect width="${50 * percentage / 100}" height="10" fill="#4caf50"/>
             </svg></span>`;
