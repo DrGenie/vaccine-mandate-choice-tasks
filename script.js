@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tutorial-next-6").addEventListener("click", nextSlide);
   document.getElementById("tutorial-next-7").addEventListener("click", nextSlide);
   document.getElementById("example-next").addEventListener("click", nextSlide);
+  document.getElementById("scenario-next").addEventListener("click", nextSlide);
   document.getElementById("instr-back").addEventListener("click", prevSlide);
   document.getElementById("start-tasks").addEventListener("click", nextSlide);
   
@@ -25,11 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tutorial-back-6").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-7").addEventListener("click", prevSlide);
   document.getElementById("example-back").addEventListener("click", prevSlide);
+  document.getElementById("scenario-back").addEventListener("click", prevSlide);
   
   // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
 
-  // Refresh slides array after dynamic slides are added
+  // Refresh the slides array after dynamic slides are added
   slides = Array.from(document.querySelectorAll(".slide"));
 
   // Show the first slide
@@ -84,7 +86,7 @@ function generateTaskSlides() {
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
-      // ... (Add scenarios 2 to 8 as before)
+      // Add scenarios 2 to 8 similarly…
       {
         scenario: 9,
         mandateA: {
@@ -118,7 +120,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create comparison table with info icons for each attribute label
+    // Create a comparison table with info icons for attribute labels
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -151,7 +153,7 @@ function generateTaskSlides() {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
     
-    // Create form for choice questions
+    // Create a form for the choice questions
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.scenario}`;
     form.innerHTML = `
@@ -204,6 +206,7 @@ function generateTaskSlides() {
         form.reportValidity();
         return;
       }
+      // Record response time for this task slide
       const responseTime = Date.now() - taskStartTime;
       saveResponse(form, responseTime);
       nextSlide();
@@ -262,12 +265,12 @@ function capitalize(str) {
 
 function getAttributeDescription(attr) {
   const desc = {
-    scope: "Defines who must be vaccinated. 'High-risk occupations only' targets critical roles (e.g., healthcare, emergency services); 'All occupations and public spaces' applies universally.",
-    threshold: "Sets the infection level that triggers the mandate. A lower threshold (e.g., 50 cases per 100k with 10% increase) means the mandate is activated earlier.",
-    coverage: "Specifies the vaccination percentage required to lift the mandate. Lower percentages mean mandates are lifted sooner.",
-    incentives: "Indicates if any rewards are offered to encourage vaccination (such as paid time off or financial discounts).",
-    exemption: "Outlines who may opt out. Narrow exemptions (medical only) limit opt-outs, while broader exemptions allow more flexibility.",
-    cost: "Represents the economic burden of complying with the mandate. Lower costs impose less burden on individuals."
+    scope: "This attribute indicates who is required to be vaccinated. 'High-risk occupations only' means that only individuals in essential or high-risk roles (such as healthcare workers) must be vaccinated, while 'All occupations and public spaces' means everyone is required to be vaccinated.",
+    threshold: "This attribute sets the infection level that will trigger the mandate. A lower threshold (e.g., 50 cases per 100k with a 10% weekly increase) means that the mandate is activated early to curb the spread, whereas a higher threshold delays intervention until the outbreak is more severe.",
+    coverage: "This attribute defines the vaccination rate required before the mandate is lifted. A lower percentage (50%) means the restrictions will be lifted sooner, while a higher percentage (90%) requires near-universal vaccination before lifting the mandate.",
+    incentives: "This attribute describes any additional rewards provided to encourage vaccination. For example, paid time off or government subsidies may be offered to offset any inconvenience or cost associated with getting vaccinated.",
+    exemption: "This attribute outlines who is allowed to opt out of the mandate. 'Medical exemptions only' restrict opt-outs to those with verifiable health issues, while broader exemptions (including religious or personal belief reasons) allow more people to opt out.",
+    cost: "This attribute represents the opportunity cost of complying with the mandate—such as lost wages or travel expenses. A lower cost indicates that compliance is less burdensome on the individual."
   };
   return desc[attr] || "";
 }
@@ -275,18 +278,18 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Targets critical roles such as healthcare and emergency services.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Only critical roles are mandated.">⚠️</span>`;
     } else {
-      return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
+      return `<span class="icon-tooltip" title="All occupations and public spaces: Applies universally.">🌐</span>`;
     }
   }
   if (attr === "threshold") {
     if (value.includes("50 cases")) {
-      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Early trigger for intervention.">🟢</span>`;
+      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Early trigger.">🟢</span>`;
     } else if (value.includes("100 cases")) {
       return `<span class="icon-tooltip" title="100 cases per 100k, 15% increase: Moderate trigger.">🟠</span>`;
     } else if (value.includes("200 cases")) {
-      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Late trigger under severe outbreak conditions.">🔴</span>`;
+      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Late trigger.">🔴</span>`;
     }
   }
   if (attr === "coverage") {
@@ -303,7 +306,7 @@ function getIcon(attr, value) {
     if (value.includes("No incentives")) {
       return `<span class="icon-tooltip" title="No incentives provided.">🚫</span>`;
     } else if (value.includes("Paid time off")) {
-      return `<span class="icon-tooltip" title="Paid time off for vaccination: Compensates for lost work time.">🕒</span>`;
+      return `<span class="icon-tooltip" title="Paid time off for vaccination: Offsets lost work time.">🕒</span>`;
     } else if (value.includes("10% discount")) {
       return `<span class="icon-tooltip" title="10% discount on government services: Provides a financial incentive.">💸</span>`;
     }
@@ -319,13 +322,13 @@ function getIcon(attr, value) {
   }
   if (attr === "cost") {
     if (value.includes("AUD5")) {
-      return `<span class="icon-tooltip" title="Low opportunity cost (A$5): Minimal economic burden.">$</span>`;
+      return `<span class="icon-tooltip" title="Low opportunity cost (A$5): Minimal burden.">$</span>`;
     } else if (value.includes("AUD20")) {
-      return `<span class="icon-tooltip" title="Moderate opportunity cost (A$20): Typical cost in urban settings.">$ $</span>`;
+      return `<span class="icon-tooltip" title="Moderate opportunity cost (A$20): Typical burden.">$ $</span>`;
     } else if (value.includes("AUD50")) {
-      return `<span class="icon-tooltip" title="High opportunity cost (A$50): Significant economic burden.">$ $ $</span>`;
+      return `<span class="icon-tooltip" title="High opportunity cost (A$50): Significant burden.">$ $ $</span>`;
     } else if (value.includes("AUD0")) {
-      return `<span class="icon-tooltip" title="No opportunity cost (A$0): No economic burden.">$0</span>`;
+      return `<span class="icon-tooltip" title="No opportunity cost (A$0): No burden.">$0</span>`;
     }
   }
   return "";
