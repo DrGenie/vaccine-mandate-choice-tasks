@@ -1,4 +1,4 @@
-/* General Stylees */
+/* General Styles */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: #f7f9fc;
@@ -96,7 +96,7 @@ th {
   font-size: 18px;
 }
 
-/* Progress SVG for Coverage (smaller size) */
+/* Progress SVG for Coverage */
 .progress-svg {
   width: 30px;
   height: 6px;
@@ -144,6 +144,12 @@ th {
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* Animated Demo Styles */
+.animated-demo {
+  margin: 20px auto;
+  text-align: center;
+}
+
 /* Responsive Styles */
 @media (max-width: 600px) {
   .container {
@@ -165,10 +171,4 @@ th {
   font-size: 18px;
   color: #00796b;
   margin-top: 20px;
-}
-
-/* Animated Demo Styles */
-.animated-demo {
-  margin: 20px auto;
-  text-align: center;
 }
