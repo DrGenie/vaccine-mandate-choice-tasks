@@ -1,4 +1,4 @@
-// Global variables for slide navigatgion, response storage, and timing
+// Global variables for slide navigation, response storage, and timing
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
 
-  // Refresh the slides array after dynamic slides are added
+  // Refresh slides array after dynamic slides are added
   slides = Array.from(document.querySelectorAll(".slide"));
 
   // Show the first slide
@@ -84,7 +84,7 @@ function generateTaskSlides() {
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
-      // ... scenarios 2 through 9 (see previous version for complete data)
+      // ... (Add scenarios 2 to 8 as before)
       {
         scenario: 9,
         mandateA: {
@@ -118,7 +118,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create a comparison table with info icons for each attribute label
+    // Create comparison table with info icons for each attribute label
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -151,20 +151,20 @@ function generateTaskSlides() {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
     
-    // Create a form for the choice questions
+    // Create form for choice questions
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.scenario}`;
     form.innerHTML = `
       <div class="questions">
         <fieldset required>
-          <legend>Which vaccine mandate option would you prefer? (pick only one option)</legend>
+          <legend>Which vaccine mandate option would you prefer? (Pick only one option)</legend>
           <label>
             <input type="radio" name="choice" value="A" required>
-            I prefer Vaccine Mandate A – meaning you favor the policy features shown in column A.
+            I prefer Vaccine Mandate A – meaning you favor the features shown in column A.
           </label>
           <label>
             <input type="radio" name="choice" value="B" required>
-            I prefer Vaccine Mandate B – meaning you favor the policy features shown in column B.
+            I prefer Vaccine Mandate B – meaning you favor the features shown in column B.
           </label>
         </fieldset>
         <fieldset required>
@@ -204,7 +204,6 @@ function generateTaskSlides() {
         form.reportValidity();
         return;
       }
-      // Record response time for this task slide
       const responseTime = Date.now() - taskStartTime;
       saveResponse(form, responseTime);
       nextSlide();
@@ -263,12 +262,12 @@ function capitalize(str) {
 
 function getAttributeDescription(attr) {
   const desc = {
-    scope: "Defines who must be vaccinated. 'High-risk occupations only' targets critical roles (e.g., healthcare, emergency services) while 'All occupations and public spaces' applies universally.",
-    threshold: "Determines the infection level that triggers the mandate. A lower threshold (e.g., 50 cases per 100k with a 10% increase) means earlier action.",
-    coverage: "Specifies the vaccination percentage required to lift the mandate. Lower coverage means the mandate is lifted sooner.",
-    incentives: "Describes any rewards offered to encourage vaccination, such as paid time off or discounts.",
-    exemption: "Outlines who may opt out of the mandate. A narrow exemption (medical only) limits opt-outs, while broader exemptions allow more flexibility.",
-    cost: "Represents the economic or opportunity cost of compliance. Lower cost means less burden on individuals."
+    scope: "Defines who must be vaccinated. 'High-risk occupations only' targets critical roles (e.g., healthcare, emergency services); 'All occupations and public spaces' applies universally.",
+    threshold: "Sets the infection level that triggers the mandate. A lower threshold (e.g., 50 cases per 100k with 10% increase) means the mandate is activated earlier.",
+    coverage: "Specifies the vaccination percentage required to lift the mandate. Lower percentages mean mandates are lifted sooner.",
+    incentives: "Indicates if any rewards are offered to encourage vaccination (such as paid time off or financial discounts).",
+    exemption: "Outlines who may opt out. Narrow exemptions (medical only) limit opt-outs, while broader exemptions allow more flexibility.",
+    cost: "Represents the economic burden of complying with the mandate. Lower costs impose less burden on individuals."
   };
   return desc[attr] || "";
 }
