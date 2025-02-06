@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>To mandate or not to mandate? Vaccine Mandate DCE Survey (for research team only)</title>
+  <title>To mandate or not to mandate? Vaccine Mandate Survey</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
   <!-- Google Fonts -->
@@ -21,8 +21,8 @@
       <h2>Understanding Vaccine Mandate Characteristics</h2>
       <p>
         In this survey, we want to learn how different features of a vaccine mandate affect your decision.
-        You will first see a series of tutorial slides explaining six key attributes and their levels.
-        After reviewing, you will see the scenario description, then an example choice task, and finally complete nine choice tasks.
+        You will first review a series of tutorial slides that describe six key attributes and their levels.
+        Then you will see the full scenario description, an example choice task, and finally complete nine choice tasks.
       </p>
       <div class="navigation-buttons">
         <button class="next-button" id="intro-next">Next</button>
@@ -31,15 +31,21 @@
 
     <!-- Slide 2: Tutorial – Scope of Mandate -->
     <div class="slide" id="slide-2">
-      <h2>Scope of Mandate</h2>
+      <h2>Tutorial: Scope of Mandate</h2>
       <p>
         <strong>What it means:</strong> This attribute defines who is required to be vaccinated.
-        <br><br>
-        <strong>High‑risk occupations only:</strong>
-        <span class="icon-tooltip" title="This means only individuals in critical roles (e.g., healthcare, emergency services) are required to be vaccinated. This focuses protection on key sectors, reducing disruptions in essential services.">⚠️</span>
-        <br><br>
-        <strong>All occupations and public spaces:</strong>
-        <span class="icon-tooltip" title="This means everyone—no matter their job or location—is required to be vaccinated. This approach maximizes overall public health protection, though it is more universal.">🌐</span>
+      </p>
+      <p>
+        <strong>High‑risk occupations only:</strong> 
+        <span class="icon-tooltip" title="High‑risk occupations only: Only individuals in critical roles (e.g., healthcare, emergency services) are required.">⚠️</span>
+        <br>
+        <small>(In lay language: Only essential workers, such as nurses and firefighters, must be vaccinated.)</small>
+      </p>
+      <p>
+        <strong>All occupations and public spaces:</strong> 
+        <span class="icon-tooltip" title="All occupations and public spaces: Everyone is required to be vaccinated.">🌐</span>
+        <br>
+        <small>(In lay language: Every person, regardless of job or location, must be vaccinated.)</small>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-2">Back</button>
@@ -49,18 +55,27 @@
 
     <!-- Slide 3: Tutorial – Infection Threshold -->
     <div class="slide" id="slide-3">
-      <h2>Infection Threshold for Mandate Activation</h2>
+      <h2>Tutorial: Infection Threshold for Mandate Activation</h2>
       <p>
-        <strong>What it means:</strong> This attribute sets the level of infections needed to trigger the mandate.
-        <br><br>
-        <strong>50 cases per 100k with 10% weekly increase:</strong>
-        <span class="icon-tooltip" title="A low threshold means the mandate is activated early to prevent outbreaks from escalating.">🟢</span>
-        <br><br>
-        <strong>100 cases per 100k with 15% weekly increase:</strong>
-        <span class="icon-tooltip" title="A moderate threshold offers a balance between early intervention and economic/social costs.">🟠</span>
-        <br><br>
-        <strong>200 cases per 100k with 20% weekly increase:</strong>
-        <span class="icon-tooltip" title="A high threshold delays activation until the outbreak is severe.">🔴</span>
+        <strong>What it means:</strong> This attribute sets the level of infections needed to activate the mandate.
+      </p>
+      <p>
+        <strong>50 cases per 100k with 10% weekly increase:</strong> 
+        <span class="icon-tooltip" title="50 cases per 100k, 10% increase: Activates early to curb outbreaks.">🟢</span>
+        <br>
+        <small>(In lay language: The mandate starts when infections are low—helping to prevent a rapid outbreak.)</small>
+      </p>
+      <p>
+        <strong>100 cases per 100k with 15% weekly increase:</strong> 
+        <span class="icon-tooltip" title="100 cases per 100k, 15% increase: A moderate trigger level.">🟠</span>
+        <br>
+        <small>(In lay language: A balanced level, intervening when the outbreak is noticeable but not extreme.)</small>
+      </p>
+      <p>
+        <strong>200 cases per 100k with 20% weekly increase:</strong> 
+        <span class="icon-tooltip" title="200 cases per 100k, 20% increase: Triggers only during severe outbreaks.">🔴</span>
+        <br>
+        <small>(In lay language: The mandate is delayed until the outbreak is very serious.)</small>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-3">Back</button>
@@ -70,24 +85,33 @@
 
     <!-- Slide 4: Tutorial – Vaccine Coverage Requirement -->
     <div class="slide" id="slide-4">
-      <h2>Vaccine Coverage Requirement for Lifting Mandates</h2>
+      <h2>Tutorial: Vaccine Coverage Requirement for Lifting Mandates</h2>
       <p>
-        <strong>What it means:</strong> This attribute specifies the vaccination rate required to lift the mandate.
-        <br><br>
+        <strong>What it means:</strong> This attribute indicates the vaccination rate required before a mandate is lifted.
+      </p>
+      <p>
         <strong>Low (50%):</strong>
-        <span class="icon-tooltip" title="A 50% coverage requirement implies that the mandate is lifted earlier, even with moderate protection.">
+        <span class="icon-tooltip" title="50% coverage: Mandate is lifted when half the population is vaccinated.">
           <svg class="progress-svg" viewBox="0 0 30 6"><rect width="30" height="6" fill="#ddd"/><rect width="15" height="6" fill="#4caf50"/></svg>
         </span>
-        <br><br>
+        <br>
+        <small>(In lay language: The mandate ends when only half the people are vaccinated.)</small>
+      </p>
+      <p>
         <strong>Moderate (70%):</strong>
-        <span class="icon-tooltip" title="A 70% coverage requirement is a balanced approach, ensuring substantial protection before lifting mandates.">
+        <span class="icon-tooltip" title="70% coverage: A balanced requirement for ending the mandate.">
           <svg class="progress-svg" viewBox="0 0 30 6"><rect width="30" height="6" fill="#ddd"/><rect width="21" height="6" fill="#4caf50"/></svg>
         </span>
-        <br><br>
+        <br>
+        <small>(In lay language: Mandate is lifted when a substantial majority is vaccinated.)</small>
+      </p>
+      <p>
         <strong>High (90%):</strong>
-        <span class="icon-tooltip" title="A 90% coverage requirement requires nearly universal vaccination before the mandate is lifted, ensuring maximum safety.">
+        <span class="icon-tooltip" title="90% coverage: Mandate remains until nearly everyone is vaccinated.">
           <svg class="progress-svg" viewBox="0 0 30 6"><rect width="30" height="6" fill="#ddd"/><rect width="27" height="6" fill="#4caf50"/></svg>
         </span>
+        <br>
+        <small>(In lay language: The mandate only ends when almost everyone is vaccinated.)</small>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-4">Back</button>
@@ -97,18 +121,27 @@
 
     <!-- Slide 5: Tutorial – Incentives for Vaccination -->
     <div class="slide" id="slide-5">
-      <h2>Incentives for Vaccination</h2>
+      <h2>Tutorial: Incentives for Vaccination</h2>
       <p>
-        <strong>What it means:</strong> This attribute describes any rewards provided to encourage vaccination.
-        <br><br>
+        <strong>What it means:</strong> This attribute describes any rewards offered to encourage vaccination.
+      </p>
+      <p>
         <strong>No incentives:</strong>
-        <span class="icon-tooltip" title="No extra rewards are offered.">🚫</span>
-        <br><br>
+        <span class="icon-tooltip" title="No incentives: No additional rewards are offered.">🚫</span>
+        <br>
+        <small>(In lay language: There are no extra benefits offered.)</small>
+      </p>
+      <p>
         <strong>Paid time off (1–3 days):</strong>
-        <span class="icon-tooltip" title="This offers compensation for lost work time, making it easier for people to get vaccinated.">🕒</span>
-        <br><br>
+        <span class="icon-tooltip" title="Paid time off: Employees get time off work as compensation.">🕒</span>
+        <br>
+        <small>(In lay language: You receive extra days off to make up for the time spent getting vaccinated.)</small>
+      </p>
+      <p>
         <strong>Government subsidies/discounts:</strong>
-        <span class="icon-tooltip" title="Direct financial incentives, such as discounts on services, encourage vaccination.">💸</span>
+        <span class="icon-tooltip" title="Government subsidies/discounts: Direct financial benefits are provided.">💸</span>
+        <br>
+        <small>(In lay language: You get money or discounts that help offset the cost of getting vaccinated.)</small>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-5">Back</button>
@@ -118,18 +151,27 @@
 
     <!-- Slide 6: Tutorial – Exemption Policy -->
     <div class="slide" id="slide-6">
-      <h2>Exemption Policy</h2>
+      <h2>Tutorial: Exemption Policy</h2>
       <p>
-        <strong>What it means:</strong> This attribute outlines who is allowed to opt out of the mandate.
-        <br><br>
+        <strong>What it means:</strong> This attribute outlines who is permitted to opt out of the mandate.
+      </p>
+      <p>
         <strong>Medical exemptions only:</strong>
-        <span class="icon-tooltip" title="Only individuals with verified health risks may opt out.">🩺</span>
-        <br><br>
+        <span class="icon-tooltip" title="Medical exemptions only: Only those with verified health risks can opt out.">🩺</span>
+        <br>
+        <small>(In lay language: Only people with proven medical issues are allowed to skip vaccination.)</small>
+      </p>
+      <p>
         <strong>Medical and religious exemptions:</strong>
-        <span class="icon-tooltip" title="Allows opt-out for both health risks and religious objections.">🩺🙏</span>
-        <br><br>
+        <span class="icon-tooltip" title="Medical and religious exemptions: Allows opt-out for health and religious reasons.">🩺🙏</span>
+        <br>
+        <small>(In lay language: People can opt out if they have medical problems or sincere religious objections.)</small>
+      </p>
+      <p>
         <strong>Medical, religious and broad personal belief exemptions:</strong>
-        <span class="icon-tooltip" title="Permits a wider range of opt-out reasons; while more flexible, it may lower overall vaccination rates.">🩺🙏💡</span>
+        <span class="icon-tooltip" title="Broad exemptions: Allows opt-out for many reasons, which may lower overall uptake.">🩺🙏💡</span>
+        <br>
+        <small>(In lay language: A wide range of reasons are accepted, so more people may choose not to get vaccinated.)</small>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-6">Back</button>
@@ -139,18 +181,27 @@
 
     <!-- Slide 7: Tutorial – Opportunity Cost -->
     <div class="slide" id="slide-7">
-      <h2>Opportunity Cost of Compliance</h2>
+      <h2>Tutorial: Opportunity Cost of Compliance</h2>
       <p>
-        <strong>What it means:</strong> This attribute represents the economic or personal cost (such as time, travel, or lost wages) associated with complying with the mandate.
-        <br><br>
+        <strong>What it means:</strong> This attribute represents the cost (in time, travel, or money) for an individual to comply with the mandate.
+      </p>
+      <p>
         <strong>Low (A$5):</strong>
-        <span class="icon-tooltip" title="Minimal burden—only a small cost.">$</span>
-        <br><br>
+        <span class="icon-tooltip" title="Low cost: Minimal time or money lost.">$</span>
+        <br>
+        <small>(In lay language: Very little burden or inconvenience.)</small>
+      </p>
+      <p>
         <strong>Moderate (A$20):</strong>
-        <span class="icon-tooltip" title="A typical burden in urban areas—moderate time and expense.">$ $</span>
-        <br><br>
+        <span class="icon-tooltip" title="Moderate cost: Typical burden in urban areas.">$ $</span>
+        <br>
+        <small>(In lay language: Some inconvenience or cost is incurred.)</small>
+      </p>
+      <p>
         <strong>High (A$50):</strong>
-        <span class="icon-tooltip" title="A significant burden—substantial cost in time or money.">$ $ $</span>
+        <span class="icon-tooltip" title="High cost: Considerable time, travel, or lost wages.">$ $ $</span>
+        <br>
+        <small>(In lay language: A significant burden is placed on the individual.)</small>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-7">Back</button>
@@ -162,11 +213,11 @@
     <div class="slide" id="slide-8">
       <h2>Scenario Description</h2>
       <p>
-        Imagine a future where a new pandemic has emerged, caused by a novel virus different from COVID‑19 but with similar global impact.
+        Imagine a future where a new pandemic has emerged—caused by a novel virus different from COVID‑19 but with a similar global impact.
         Safe and effective vaccines are available to everyone.
-        Governments around the world are considering various policies—including making vaccines mandatory—to control the spread of the disease.
-        While all vaccines are safe and effective, the rules for mandating vaccination may vary.
-        In each choice task, you will compare two different hypothetical vaccine mandate policies and decide which one you prefer.
+        Governments around the world are considering different policies—including mandatory vaccination—to control the spread of the disease.
+        Although all vaccines are safe and effective, the details of how a mandate is implemented can vary.
+        In each choice task, you will compare two hypothetical vaccine mandate policies and decide which one you prefer.
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="scenario-back">Back</button>
@@ -174,14 +225,13 @@
       </div>
     </div>
 
-    <!-- Slide 9: Example Choice Task with Enhanced Animation and Full Attributes -->
+    <!-- Slide 9: Example Choice Task with Enhanced Animation -->
     <div class="slide" id="slide-9">
       <h2>Example Choice Task</h2>
       <p>
         Below is an example of a choice task. The table shows two hypothetical vaccine mandate policies defined by all six attributes.
-        Hover over the info icons for detailed explanations about what each attribute means.
-        Choosing an option (A or B) means you prefer that set of policy features.
-        The follow-up question asks if your preference would remain if you had the alternative of not choosing any mandate.
+        Hover over the info icons for detailed explanations. Choosing Vaccine Mandate A (or B) means you prefer that policy configuration.
+        The follow-up question asks if you would change your preference if you had the option not to choose any mandate.
       </p>
       <div class="example-task">
         <table>
@@ -195,96 +245,111 @@
           <tbody>
             <tr>
               <td>
-                Scope <span class="info-icon" data-tooltip="Scope defines who must be vaccinated. 'High-risk occupations only' targets critical roles; 'All occupations and public spaces' applies to everyone.">ℹ️</span>
+                Scope <span class="info-icon" data-tooltip="Scope defines who must be vaccinated. 'High-risk occupations only' means only essential workers are mandated; 'All occupations and public spaces' applies to everyone.">ℹ️</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="High-risk occupations only">⚠️</span> High-risk occupations only
+                <br><small>(Only critical roles are mandated.)</small>
               </td>
               <td>
                 <span class="icon-tooltip" title="All occupations and public spaces">🌐</span> All occupations and public spaces
+                <br><small>(Everyone is mandated.)</small>
               </td>
             </tr>
             <tr>
               <td>
-                Threshold <span class="info-icon" data-tooltip="The infection threshold determines when the mandate is activated. A lower threshold (e.g., 50 cases per 100k with 10% increase) triggers early intervention.">ℹ️</span>
+                Threshold <span class="info-icon" data-tooltip="Threshold is the infection rate that activates the mandate. Lower thresholds mean earlier intervention.">ℹ️</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="50 cases per 100k, 10% increase">🟢</span> 50 cases per 100k, 10% increase
+                <br><small>(Early intervention.)</small>
               </td>
               <td>
                 <span class="icon-tooltip" title="100 cases per 100k, 15% increase">🟠</span> 100 cases per 100k, 15% increase
+                <br><small>(Moderate intervention.)</small>
               </td>
             </tr>
             <tr>
               <td>
-                Coverage <span class="info-icon" data-tooltip="Coverage is the vaccination rate required to lift the mandate. Lower percentages indicate that mandates are lifted sooner.">ℹ️</span>
+                Coverage <span class="info-icon" data-tooltip="Coverage is the vaccination rate needed to lift the mandate. Lower percentages imply quicker lifting.">ℹ️</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="50% coverage">
-                  <svg class="progress-svg" viewBox="0 0 30 6">
-                    <rect width="30" height="6" fill="#ddd"/>
-                    <rect width="15" height="6" fill="#4caf50"/>
-                  </svg>
+                  <svg class="progress-svg" viewBox="0 0 30 6"><rect width="30" height="6" fill="#ddd"/><rect width="15" height="6" fill="#4caf50"/></svg>
                 </span> 50%
+                <br><small>(Lifts early.)</small>
               </td>
               <td>
                 <span class="icon-tooltip" title="90% coverage">
-                  <svg class="progress-svg" viewBox="0 0 30 6">
-                    <rect width="30" height="6" fill="#ddd"/>
-                    <rect width="27" height="6" fill="#4caf50"/>
-                  </svg>
+                  <svg class="progress-svg" viewBox="0 0 30 6"><rect width="30" height="6" fill="#ddd"/><rect width="27" height="6" fill="#4caf50"/></svg>
                 </span> 90%
+                <br><small>(Lifts only with very high vaccination.)</small>
               </td>
             </tr>
             <tr>
               <td>
-                Incentives <span class="info-icon" data-tooltip="Incentives include any rewards offered to encourage vaccination, such as paid time off or financial discounts.">ℹ️</span>
+                Incentives <span class="info-icon" data-tooltip="Incentives are additional rewards to encourage vaccination.">ℹ️</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="No incentives">🚫</span> No incentives
+                <br><small>(No extra benefits.)</small>
               </td>
               <td>
                 <span class="icon-tooltip" title="Paid time off (1–3 days)">🕒</span> Paid time off (1–3 days)
+                <br><small>(Extra time off is provided.)</small>
               </td>
             </tr>
             <tr>
               <td>
-                Exemption <span class="info-icon" data-tooltip="Exemption policy indicates who may opt out. 'Medical exemptions only' limits opt-outs to those with verified health risks, while broader exemptions allow additional reasons.">ℹ️</span>
+                Exemption <span class="info-icon" data-tooltip="Exemption policy defines who can opt out of the mandate.">ℹ️</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="Medical exemptions only">🩺</span> Medical exemptions only
+                <br><small>(Only those with health risks may opt out.)</small>
               </td>
               <td>
                 <span class="icon-tooltip" title="Medical and religious exemptions">🩺🙏</span> Medical and religious exemptions
+                <br><small>(Opt-out for health or religious reasons.)</small>
               </td>
             </tr>
             <tr>
               <td>
-                Cost <span class="info-icon" data-tooltip="Opportunity cost represents the economic burden of compliance. Lower cost means less personal burden.">ℹ️</span>
+                Cost <span class="info-icon" data-tooltip="Cost represents the burden of complying with the mandate.">ℹ️</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="Low opportunity cost (A$5)">$</span> Low opportunity cost (A$5)
+                <br><small>(Minimal personal burden.)</small>
               </td>
               <td>
                 <span class="icon-tooltip" title="Moderate opportunity cost (A$20)">$ $</span> Moderate opportunity cost (A$20)
+                <br><small>(Noticeable but manageable burden.)</small>
               </td>
             </tr>
           </tbody>
         </table>
         <p>
-          <em>Example Explanation:</em> By choosing Vaccine Mandate A, you indicate that you prefer a policy that—for example—requires vaccination only for high-risk occupations, is activated early (at 50 cases per 100k with a 10% increase), is lifted at 50% coverage, offers no incentives, allows only medical exemptions, and has a low cost. The follow-up question asks if you would change your choice if you had the option not to choose any mandate.
+          <em>Example Explanation:</em> By choosing Vaccine Mandate A, you indicate a preference for a policy that requires vaccination only for high‑risk occupations, activates early (at 50 cases per 100k with a 10% increase), lifts once 50% are vaccinated, offers no incentives, allows only medical exemptions, and has a low compliance cost. The follow‑up question asks if you’d stick with that choice even if you had the option to opt out entirely.
         </p>
         <!-- Animated SVG demonstration -->
         <div class="animated-demo">
           <svg width="300" height="150" viewBox="0 0 300 150">
             <rect x="0" y="0" width="300" height="150" fill="#f7f9fc"/>
-            <text x="150" y="30" text-anchor="middle" font-size="18" fill="#005f73">Example Explanation</text>
+            <!-- Animated text cycling through attributes -->
+            <text x="150" y="40" text-anchor="middle" font-size="16" fill="#005f73">
+              <set attributeName="text" to="Scope: Who is mandated?" begin="0s" dur="2s" />
+              <set attributeName="text" to="Threshold: When mandate activates?" begin="2s" dur="2s" />
+              <set attributeName="text" to="Coverage: When mandate is lifted?" begin="4s" dur="2s" />
+              <set attributeName="text" to="Incentives: Extra rewards?" begin="6s" dur="2s" />
+              <set attributeName="text" to="Exemption: Who can opt out?" begin="8s" dur="2s" />
+              <set attributeName="text" to="Cost: Economic burden?" begin="10s" dur="2s" />
+            </text>
+            <!-- A pulsing circle to indicate decision-making -->
             <circle cx="150" cy="100" r="10" fill="#4caf50">
               <animate attributeName="r" from="10" to="30" dur="1s" repeatCount="indefinite" />
               <animate attributeName="opacity" from="1" to="0.3" dur="1s" repeatCount="indefinite" />
             </circle>
             <text x="150" y="140" text-anchor="middle" font-size="14" fill="#333">
-              The pulsing circle represents dynamic decision-making.
+              The animation cycles through the features to help you understand each one.
             </text>
           </svg>
         </div>
