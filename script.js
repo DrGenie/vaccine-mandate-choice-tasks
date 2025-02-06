@@ -1,4 +1,4 @@
-// Global variables for slide navigation, response storage, and timing
+// Global variables foor slide navigation, response storage, and timing
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
