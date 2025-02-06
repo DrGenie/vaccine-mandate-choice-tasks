@@ -2,10 +2,10 @@
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
-let taskStartTime = 0; // Record start time for each task slide
+let taskStartTime = 0; // To record start time for each task slide
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Attach event listeners for static slides individually
+  // Attach event listeners for static slides
   document.getElementById("intro-next").addEventListener("click", () => { nextSlide(); });
   document.getElementById("tutorial-next-2").addEventListener("click", () => { nextSlide(); });
   document.getElementById("tutorial-next-3").addEventListener("click", () => { nextSlide(); });
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("instr-back").addEventListener("click", () => { prevSlide(); });
   document.getElementById("start-tasks").addEventListener("click", () => { nextSlide(); });
 
-  // Attach back button listeners for static slides (if present)
+  // Attach back button listeners for static slides
   document.getElementById("tutorial-back-2").addEventListener("click", () => { prevSlide(); });
   document.getElementById("tutorial-back-3").addEventListener("click", () => { prevSlide(); });
   document.getElementById("tutorial-back-4").addEventListener("click", () => { prevSlide(); });
@@ -40,7 +40,7 @@ function showSlide(index) {
   slides.forEach((slide, i) => {
     slide.classList.toggle("active", i === index);
   });
-  // If the current slide is a task slide, record its start time
+  // If the current slide is a dynamic task slide, record its start time
   if (slides[index].classList.contains("task-slide")) {
     taskStartTime = Date.now();
   }
@@ -239,7 +239,6 @@ function generateTaskSlides() {
     ]
   };
 
-  // For this demo, use block1 and iterate through its scenarios
   const scenarios = block1.scenarios;
   const taskContainer = document.getElementById("task-slides");
   scenarios.forEach((scenarioData, idx) => {
@@ -251,7 +250,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create a comparison table with tooltips for each attribute
+    // Create comparison table with tooltips for each attribute
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -264,11 +263,10 @@ function generateTaskSlides() {
     table.appendChild(thead);
     
     const tbody = document.createElement("tbody");
-    // Order the six attributes as required
+    // Six attributes in a fixed order
     const attributes = ["scope", "threshold", "coverage", "incentives", "exemption", "cost"];
     attributes.forEach(attr => {
       const row = document.createElement("tr");
-      
       const tdAttr = document.createElement("td");
       tdAttr.textContent = capitalize(attr);
       tdAttr.title = getAttributeDescription(attr);
@@ -318,7 +316,7 @@ function generateTaskSlides() {
     `;
     taskSlide.appendChild(form);
     
-    // Navigation buttons (Back and Next)
+    // Navigation buttons for dynamic task slides
     const navDiv = document.createElement("div");
     navDiv.className = "navigation-buttons";
     const backBtn = document.createElement("button");
@@ -332,6 +330,7 @@ function generateTaskSlides() {
     
     const nextBtn = document.createElement("button");
     nextBtn.className = "next-button";
+    // For the last scenario, label as Submit
     nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
     nextBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -340,11 +339,13 @@ function generateTaskSlides() {
         form.reportValidity();
         return;
       }
+      // Record response time for this task slide
       const responseTime = Date.now() - taskStartTime;
       saveResponse(form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
-        submitResponses();
+        // Use a short delay to ensure the slide transition completes
+        setTimeout(submitResponses, 300);
       }
     });
     navDiv.appendChild(nextBtn);
@@ -410,7 +411,7 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Targets individuals in critical roles such as healthcare and emergency services.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Targets critical roles such as healthcare and emergency services.">⚠️</span>`;
     } else {
       return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
     }
