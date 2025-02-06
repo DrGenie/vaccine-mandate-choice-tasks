@@ -2,7 +2,7 @@
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
-let taskStartTime = 0; // To record the start time for each task slide
+let taskStartTime = 0; // To record start time for each dynamic task slide
 
 document.addEventListener("DOMContentLoaded", () => {
   // Attach event listeners for static slides
@@ -25,11 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tutorial-back-6").addEventListener("click", () => { prevSlide(); });
   document.getElementById("tutorial-back-7").addEventListener("click", () => { prevSlide(); });
   document.getElementById("example-back").addEventListener("click", () => { prevSlide(); });
-
+  
   // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
 
-  // Refresh the slides array after appending dynamic slides
+  // Refresh the slides array after dynamic slides are appended
   slides = Array.from(document.querySelectorAll(".slide"));
 
   // Show the first slide
@@ -250,7 +250,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create a comparison table with info icons on each attribute name
+    // Create a comparison table with an info icon next to each attribute label
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -263,11 +263,9 @@ function generateTaskSlides() {
     table.appendChild(thead);
     
     const tbody = document.createElement("tbody");
-    // Six attributes in a fixed order
     const attributes = ["scope", "threshold", "coverage", "incentives", "exemption", "cost"];
     attributes.forEach(attr => {
       const row = document.createElement("tr");
-      // Instead of simply setting title, insert an info icon next to the attribute label.
       const tdAttr = document.createElement("td");
       tdAttr.innerHTML = `${capitalize(attr)} <span class="info-icon" data-tooltip="${getAttributeDescription(attr)}">ℹ️</span>`;
       row.appendChild(tdAttr);
@@ -330,7 +328,6 @@ function generateTaskSlides() {
     
     const nextBtn = document.createElement("button");
     nextBtn.className = "next-button";
-    // Label as Submit if this is the last scenario
     nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
     nextBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -344,7 +341,6 @@ function generateTaskSlides() {
       saveResponse(form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
-        // Use a slight delay to allow slide transition before submission
         setTimeout(submitResponses, 300);
       }
     });
@@ -375,10 +371,11 @@ function submitResponses() {
   const templateParams = {
     to_email: "mesfin.genie@newcastle.edu.au",
     subject: "Vaccine Mandate Survey Responses",
-    message: emailContent
+    message: emailContent,
+    timestamp: new Date().toLocaleString()
   };
   
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
+  emailjs.send("service_zp0gsia", "template_2qu14s5", templateParams)
     .then((result) => {
       showThankYou();
     }, (error) => {
@@ -411,7 +408,7 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Targets individuals in critical roles such as healthcare and emergency services.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Targets critical roles such as healthcare and emergency services.">⚠️</span>`;
     } else {
       return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
     }
