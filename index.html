@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Full title shown in browser tab -->
+  <title>To mandate or not to mandate? Vaccine Mandate Attributes Scorecard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>To mandate or not to mandate? Vaccine Mandate Survey</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts for a professional look -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- EmailJS SDK -->
+  <!-- EmailJS SDK – replace YOUR_USER_ID with your actual EmailJS user ID -->
   <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
   <script>
     emailjs.init("YOUR_USER_ID");
@@ -16,11 +18,11 @@
   <div class="container" id="survey-container">
     <!-- Slide 1: Introduction -->
     <div class="slide active" id="slide-1">
-      <h1>To mandate or not to mandate?</h1>
+      <h1>To mandate or not to mandate? Vaccine Mandate Attributes Scorecard</h1>
       <h2>Understanding Vaccine Mandate Characteristics</h2>
       <p>
         In this section, we would like to understand how the characteristics of a vaccine mandate influence your choice.
-        We will describe the mandates using six characteristics. Please take some time to review the information on the following slides.
+        We will describe the mandates using six characteristics. Please review the information on the following slides.
         When you are ready, you will complete a series of nine choice tasks.
       </p>
       <div class="navigation-buttons">
@@ -32,11 +34,11 @@
     <div class="slide" id="slide-2">
       <h2>Scope of Mandate</h2>
       <p>
-        <strong>High‑risk occupations only:</strong> Vaccination is required only for individuals in critical roles (e.g., healthcare, emergency services).
+        <strong>High‑risk occupations only:</strong> <span class="icon-tooltip" title="Targets individuals in critical roles such as healthcare and emergency services.">⚠️</span>
+        Vaccination is required only for individuals in critical roles.
         <br><br>
-        <strong>All occupations and public spaces:</strong> Vaccination is required for everyone working and accessing public venues.
-        <br><br>
-        <span class="info-icon" data-tooltip="High‑risk: Targets critical roles to reduce disruption; All: Maximizes public health benefit by covering everyone.">ℹ️</span>
+        <strong>All occupations and public spaces:</strong> <span class="icon-tooltip" title="Applies to everyone working and accessing public venues.">🌐</span>
+        Vaccination is required for everyone.
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-2">Back</button>
@@ -48,13 +50,11 @@
     <div class="slide" id="slide-3">
       <h2>Infection Threshold for Mandate Activation</h2>
       <p>
-        <strong>50 cases per 100k with 10% weekly increase:</strong> Early trigger for intervention.
+        <strong>50 cases per 100k with 10% weekly increase:</strong> <span class="icon-tooltip" title="Early trigger for intervention.">🟢</span>
         <br><br>
-        <strong>100 cases per 100k with 15% weekly increase:</strong> Moderate trigger.
+        <strong>100 cases per 100k with 15% weekly increase:</strong> <span class="icon-tooltip" title="Moderate trigger.">🟠</span>
         <br><br>
-        <strong>200 cases per 100k with 20% weekly increase:</strong> Late trigger under severe outbreak conditions.
-        <br><br>
-        <span class="info-icon" data-tooltip="Lower thresholds trigger early action; higher thresholds delay intervention until the outbreak is severe.">ℹ️</span>
+        <strong>200 cases per 100k with 20% weekly increase:</strong> <span class="icon-tooltip" title="Late trigger under severe outbreak conditions.">🔴</span>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-3">Back</button>
@@ -66,13 +66,14 @@
     <div class="slide" id="slide-4">
       <h2>Vaccine Coverage Requirement for Lifting Mandates</h2>
       <p>
-        <strong>Low (50%):</strong> Mandates are lifted when only 50% are vaccinated.
+        <strong>Low (50%):</strong> <span class="icon-tooltip" title="Progress bar shows 50% coverage."><svg class="progress-svg" viewBox="0 0 50 10"><rect width="50" height="10" fill="#ddd"/><rect width="25" height="10" fill="#4caf50"/></svg></span>
+        Mandates are lifted when 50% are vaccinated.
         <br><br>
-        <strong>Moderate (70%):</strong> A balanced threshold that ensures substantial protection.
+        <strong>Moderate (70%):</strong> <span class="icon-tooltip" title="Progress bar shows 70% coverage."><svg class="progress-svg" viewBox="0 0 50 10"><rect width="50" height="10" fill="#ddd"/><rect width="35" height="10" fill="#4caf50"/></svg></span>
+        A balanced threshold.
         <br><br>
-        <strong>High (90%):</strong> Requires near‑universal vaccination.
-        <br><br>
-        <span class="info-icon" data-tooltip="A moderate threshold (70%) is generally considered realistic and effective.">ℹ️</span>
+        <strong>High (90%):</strong> <span class="icon-tooltip" title="Progress bar shows 90% coverage."><svg class="progress-svg" viewBox="0 0 50 10"><rect width="50" height="10" fill="#ddd"/><rect width="45" height="10" fill="#4caf50"/></svg></span>
+        Requires near‑universal vaccination.
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-4">Back</button>
@@ -84,13 +85,11 @@
     <div class="slide" id="slide-5">
       <h2>Incentives for Vaccination</h2>
       <p>
-        <strong>No incentives:</strong> No additional rewards.
+        <strong>No incentives:</strong> <span class="icon-tooltip" title="No additional rewards provided.">🚫</span>
         <br><br>
-        <strong>Paid time off (1–3 days):</strong> Compensates for lost work time.
+        <strong>Paid time off (1–3 days):</strong> <span class="icon-tooltip" title="Compensates for lost work time.">🕒</span>
         <br><br>
-        <strong>Government subsidies/discounts:</strong> Provides direct financial incentive.
-        <br><br>
-        <span class="info-icon" data-tooltip="Incentives lower the personal cost of vaccination, thereby encouraging uptake.">ℹ️</span>
+        <strong>Government subsidies/discounts:</strong> <span class="icon-tooltip" title="Provides a direct financial incentive.">💸</span>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-5">Back</button>
@@ -102,13 +101,11 @@
     <div class="slide" id="slide-6">
       <h2>Exemption Policy</h2>
       <p>
-        <strong>Medical exemptions only:</strong> Only those with verified health risks may opt out.
+        <strong>Medical exemptions only:</strong> <span class="icon-tooltip" title="Only those with verified health risks may opt out.">🩺</span>
         <br><br>
-        <strong>Medical and religious exemptions:</strong> Permits opt-out for both health and religious reasons.
+        <strong>Medical and religious exemptions:</strong> <span class="icon-tooltip" title="Permits opt-out for both health and religious reasons.">🩺🙏</span>
         <br><br>
-        <strong>Medical, religious and broad personal belief exemptions:</strong> Allows a wide range of opt‑out reasons.
-        <br><br>
-        <span class="info-icon" data-tooltip="Stricter policies (medical only) tend to boost uptake; broader exemptions offer flexibility but may lower overall coverage.">ℹ️</span>
+        <strong>Medical, religious and broad personal belief exemptions:</strong> <span class="icon-tooltip" title="Allows a wide range of opt‑out reasons.">🩺🙏💡</span>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-6">Back</button>
@@ -120,13 +117,11 @@
     <div class="slide" id="slide-7">
       <h2>Opportunity Cost of Compliance</h2>
       <p>
-        <strong>Low (A$5):</strong> Minimal economic burden.
+        <strong>Low (A$5):</strong> <span class="icon-tooltip" title="Minimal economic burden.">$</span>
         <br><br>
-        <strong>Moderate (A$20):</strong> Typical cost in urban settings.
+        <strong>Moderate (A$20):</strong> <span class="icon-tooltip" title="Typical cost in urban settings.">$ $</span>
         <br><br>
-        <strong>High (A$50):</strong> Significant burden (e.g., long travel, wage loss).
-        <br><br>
-        <span class="info-icon" data-tooltip="Lower costs are less burdensome, whereas higher costs may require compensatory incentives.">ℹ️</span>
+        <strong>High (A$50):</strong> <span class="icon-tooltip" title="Significant burden (e.g., long travel or wage loss).">$ $ $</span>
       </p>
       <div class="navigation-buttons">
         <button class="back-button" id="tutorial-back-7">Back</button>
@@ -134,11 +129,11 @@
       </div>
     </div>
 
-    <!-- Slide 8: Example Choice Task with Improved Animation -->
+    <!-- Slide 8: Example Choice Task with Enhanced Animation -->
     <div class="slide" id="slide-8">
       <h2>Example Choice Task</h2>
       <p>
-        Below is an example of a choice task. Hover over the icons to learn more about each attribute.
+        Below is an example of a choice task. Hover over the icons to see more details.
       </p>
       <div class="example-task">
         <table>
@@ -174,7 +169,7 @@
             </tr>
             <tr>
               <td>
-                <span class="info-icon" data-tooltip="Coverage: Shows the percentage required to lift mandates.">Coverage</span>
+                <span class="info-icon" data-tooltip="Coverage: Required vaccination percentage to lift mandates.">Coverage</span>
               </td>
               <td>
                 <span class="icon-tooltip" title="50% coverage"><svg class="progress-svg" viewBox="0 0 50 10">
