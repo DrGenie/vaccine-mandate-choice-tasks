@@ -86,7 +86,7 @@ function generateTaskSlides() {
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
-      // Add scenarios 2 to 8 similarly…
+      // ... (Include scenarios 2 through 8 similarly)
       {
         scenario: 9,
         mandateA: {
@@ -120,7 +120,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create a comparison table with info icons for attribute labels
+    // Create a comparison table with info icons for each attribute label
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -240,7 +240,7 @@ function submitResponses() {
   
   const templateParams = {
     to_email: "mesfin.genie@newcastle.edu.au",
-    subject: "Vaccine Mandate Survey Responses",
+    subject: "To mandate or not to mandate? Vaccine Mandate Survey (For Research Team Only)",
     message: emailContent,
     timestamp: new Date().toLocaleString()
   };
@@ -265,12 +265,12 @@ function capitalize(str) {
 
 function getAttributeDescription(attr) {
   const desc = {
-    scope: "This attribute indicates who is required to be vaccinated. 'High-risk occupations only' means that only individuals in essential or high-risk roles (such as healthcare workers) must be vaccinated, while 'All occupations and public spaces' means everyone is required to be vaccinated.",
-    threshold: "This attribute sets the infection level that will trigger the mandate. A lower threshold (e.g., 50 cases per 100k with a 10% weekly increase) means that the mandate is activated early to curb the spread, whereas a higher threshold delays intervention until the outbreak is more severe.",
-    coverage: "This attribute defines the vaccination rate required before the mandate is lifted. A lower percentage (50%) means the restrictions will be lifted sooner, while a higher percentage (90%) requires near-universal vaccination before lifting the mandate.",
-    incentives: "This attribute describes any additional rewards provided to encourage vaccination. For example, paid time off or government subsidies may be offered to offset any inconvenience or cost associated with getting vaccinated.",
-    exemption: "This attribute outlines who is allowed to opt out of the mandate. 'Medical exemptions only' restrict opt-outs to those with verifiable health issues, while broader exemptions (including religious or personal belief reasons) allow more people to opt out.",
-    cost: "This attribute represents the opportunity cost of complying with the mandate—such as lost wages or travel expenses. A lower cost indicates that compliance is less burdensome on the individual."
+    scope: "This attribute indicates who is required to be vaccinated. 'High-risk occupations only' means that only individuals in essential or critical roles (such as healthcare workers and emergency responders) are mandated. 'All occupations and public spaces' means that every person is required to be vaccinated.",
+    threshold: "This attribute sets the infection level at which the mandate is triggered. A lower threshold (e.g., 50 cases per 100k with a 10% weekly increase) means the policy is activated early to curb spread, while a higher threshold delays action until the outbreak is more severe.",
+    coverage: "This attribute specifies the vaccination rate required to lift the mandate. Lower percentages (e.g., 50%) mean that restrictions end sooner, whereas higher percentages (e.g., 90%) require nearly universal vaccination.",
+    incentives: "This attribute describes any additional rewards provided to encourage vaccination. These can include paid time off or financial discounts, which help offset the inconvenience or cost of getting vaccinated.",
+    exemption: "This attribute outlines who is permitted to opt out of the mandate. A narrow exemption (medical only) restricts opt-outs to those with proven health risks; broader exemptions (including religious or personal beliefs) allow more people to opt out.",
+    cost: "This attribute represents the opportunity cost (in terms of time, travel, or money) associated with complying with the mandate. Lower costs impose a smaller burden on individuals."
   };
   return desc[attr] || "";
 }
@@ -280,16 +280,16 @@ function getIcon(attr, value) {
     if (value.includes("High-risk")) {
       return `<span class="icon-tooltip" title="High-risk occupations only: Only critical roles are mandated.">⚠️</span>`;
     } else {
-      return `<span class="icon-tooltip" title="All occupations and public spaces: Applies universally.">🌐</span>`;
+      return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
     }
   }
   if (attr === "threshold") {
     if (value.includes("50 cases")) {
-      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Early trigger.">🟢</span>`;
+      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Early trigger for intervention.">🟢</span>`;
     } else if (value.includes("100 cases")) {
       return `<span class="icon-tooltip" title="100 cases per 100k, 15% increase: Moderate trigger.">🟠</span>`;
     } else if (value.includes("200 cases")) {
-      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Late trigger.">🔴</span>`;
+      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Late trigger when outbreak is severe.">🔴</span>`;
     }
   }
   if (attr === "coverage") {
@@ -315,9 +315,9 @@ function getIcon(attr, value) {
     if (value.includes("Medical exemptions only")) {
       return `<span class="icon-tooltip" title="Medical exemptions only: Only those with verified health risks can opt out.">🩺</span>`;
     } else if (value.includes("Medical and religious exemptions")) {
-      return `<span class="icon-tooltip" title="Medical and religious exemptions: Permits opt-out for health and religious reasons.">🩺🙏</span>`;
+      return `<span class="icon-tooltip" title="Medical and religious exemptions: Allows opt-out for health and religious reasons.">🩺🙏</span>`;
     } else if (value.toLowerCase().includes("broad")) {
-      return `<span class="icon-tooltip" title="Medical, religious and broad personal belief exemptions: Allows a wide range of opt-out reasons.">🩺🙏💡</span>`;
+      return `<span class="icon-tooltip" title="Broad exemptions: Allows a wide range of opt-out reasons.">🩺🙏💡</span>`;
     }
   }
   if (attr === "cost") {
