@@ -1,8 +1,8 @@
-// Global variables for slide navigation, responses, and task timing
+// Global variables for slide navigation, response storage, and timing
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
-let taskStartTime = 0;
+let taskStartTime = 0; // Records start time for each dynamic task slide
 
 document.addEventListener("DOMContentLoaded", () => {
   // Attach event listeners for static slides
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("example-next").addEventListener("click", nextSlide);
   document.getElementById("instr-back").addEventListener("click", prevSlide);
   document.getElementById("start-tasks").addEventListener("click", nextSlide);
-  
+
   // Attach back button listeners for static slides
   document.getElementById("tutorial-back-2").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-3").addEventListener("click", prevSlide);
@@ -25,15 +25,23 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tutorial-back-5").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-6").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-7").addEventListener("click", prevSlide);
-  document.getElementById("scenario-back").addEventListener("click", prevSlide);
   document.getElementById("example-back").addEventListener("click", prevSlide);
-  
-  // Generate dynamic task slides
+  document.getElementById("scenario-back").addEventListener("click", prevSlide);
+
+  // Attach listener for "Play Explanation" button on the example slide
+  document.getElementById("play-explanation").addEventListener("click", () => {
+    // Use SpeechSynthesis API to read out a predefined explanation
+    const explanationText = "In this example, Vaccine Mandate A means that only high-risk occupations are mandated, the policy is activated early at 50 cases per 100k with a 10 percent weekly increase, lifted when fifty percent of people are vaccinated, offers no additional incentives, allows only medical exemptions, and has a low cost. Choosing this option means you prefer a more targeted and less burdensome mandate.";
+    const utterance = new SpeechSynthesisUtterance(explanationText);
+    speechSynthesis.speak(utterance);
+  });
+
+  // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
-  
-  // Refresh slides array after dynamic slides are appended
+
+  // Refresh the slides array after dynamic slides are added
   slides = Array.from(document.querySelectorAll(".slide"));
-  
+
   // Show the first slide
   showSlide(currentSlideIndex);
 });
@@ -42,7 +50,7 @@ function showSlide(index) {
   slides.forEach((slide, i) => {
     slide.classList.toggle("active", i === index);
   });
-  // Record start time for dynamic task slides
+  // If the current slide is a dynamic task slide, record its start time
   if (slides[index].classList.contains("task-slide")) {
     taskStartTime = Date.now();
   }
@@ -63,7 +71,7 @@ function prevSlide() {
 }
 
 function generateTaskSlides() {
-  // Define sample tasks (scenarios 1 and 9 provided; add others similarly)
+  // Define tasks data (using one block for demonstration)
   const block1 = {
     block: 1,
     scenarios: [
@@ -86,7 +94,7 @@ function generateTaskSlides() {
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
-      // (Additional scenarios 2 to 8 would be added here)
+      // … (Include scenarios 2 through 8 as needed)
       {
         scenario: 9,
         mandateA: {
@@ -111,7 +119,6 @@ function generateTaskSlides() {
 
   const scenarios = block1.scenarios;
   const taskContainer = document.getElementById("task-slides");
-  
   scenarios.forEach((scenarioData, idx) => {
     const taskSlide = document.createElement("div");
     taskSlide.className = "slide task-slide";
@@ -121,7 +128,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create comparison table with info icons for each attribute label
+    // Create a comparison table with info icons for each attribute label
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -154,24 +161,24 @@ function generateTaskSlides() {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
     
-    // Create form for choice questions
+    // Create a form for the choice questions
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.scenario}`;
     form.innerHTML = `
       <div class="questions">
         <fieldset required>
-          <legend>Which vaccine mandate option would you prefer? (Pick one)</legend>
+          <legend>Which vaccine mandate option would you prefer? (Pick one option)</legend>
           <label>
             <input type="radio" name="choice" value="A" required>
-            I prefer Vaccine Mandate A – I favor the features shown in column A.
+            I prefer Vaccine Mandate A – meaning you favor the features in column A.
           </label>
           <label>
             <input type="radio" name="choice" value="B" required>
-            I prefer Vaccine Mandate B – I favor the features shown in column B.
+            I prefer Vaccine Mandate B – meaning you favor the features in column B.
           </label>
         </fieldset>
         <fieldset required>
-          <legend>If you had the option to opt out entirely, would your choice remain the same?</legend>
+          <legend>If you could opt out of a mandate entirely, would your choice remain the same?</legend>
           <label>
             <input type="radio" name="not_choose" value="same" required>
             Yes, my choice would remain the same.
@@ -185,7 +192,7 @@ function generateTaskSlides() {
     `;
     taskSlide.appendChild(form);
     
-    // Navigation buttons for dynamic task slide
+    // Navigation buttons for dynamic task slides
     const navDiv = document.createElement("div");
     navDiv.className = "navigation-buttons";
     const backBtn = document.createElement("button");
@@ -202,15 +209,17 @@ function generateTaskSlides() {
     nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
     nextBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      const currentForm = taskSlide.querySelector("form");
-      if (!currentForm.checkValidity()) {
-        currentForm.reportValidity();
+      const form = taskSlide.querySelector("form");
+      if (!form.checkValidity()) {
+        form.reportValidity();
         return;
       }
+      // Record response time for this task slide
       const responseTime = Date.now() - taskStartTime;
-      saveResponse(currentForm, responseTime);
+      saveResponse(form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
+        // Delay submission slightly to allow slide transition
         setTimeout(submitResponses, 300);
       }
     });
@@ -246,7 +255,7 @@ function submitResponses() {
   };
   
   emailjs.send("service_zp0gsia", "template_2qu14s5", templateParams)
-    .then(() => {
+    .then((result) => {
       showThankYou();
     }, (error) => {
       console.error("Submission failed:", error);
@@ -265,12 +274,12 @@ function capitalize(str) {
 
 function getAttributeDescription(attr) {
   const desc = {
-    scope: "Indicates who must be vaccinated. 'High-risk occupations only' means only essential workers (e.g., healthcare, emergency services) are required; 'All occupations and public spaces' applies to everyone.",
-    threshold: "Sets the infection level that activates the mandate. A lower threshold means earlier intervention, while a higher threshold delays action until the outbreak is severe.",
-    coverage: "Specifies the vaccination rate required to lift the mandate. Lower percentages lead to earlier lifting, whereas higher percentages require nearly universal vaccination.",
-    incentives: "Describes any rewards offered to encourage vaccination, such as paid time off or financial subsidies.",
-    exemption: "Outlines who may opt out of the mandate. A narrow exemption (medical only) restricts opt-outs; broader exemptions (including religious or personal belief) allow more people to opt out.",
-    cost: "Represents the economic or personal burden of complying with the mandate. Lower cost means less burden."
+    scope: "Indicates who must be vaccinated. 'High-risk occupations only' restricts the mandate to essential workers, while 'All occupations and public spaces' applies universally.",
+    threshold: "Sets the infection level required to activate the mandate. A lower threshold triggers early intervention; a higher threshold delays action until the outbreak is severe.",
+    coverage: "Specifies the vaccination percentage needed to lift the mandate. Lower percentages lead to earlier lifting; higher percentages require nearly universal vaccination.",
+    incentives: "Describes any rewards provided to encourage vaccination, such as extra days off or financial discounts.",
+    exemption: "Outlines who is allowed to opt out. Narrow exemptions (medical only) restrict opt-outs; broader exemptions include religious or personal reasons.",
+    cost: "Represents the economic or personal burden of complying with the mandate. Lower cost means less burden on individuals."
   };
   return desc[attr] || "";
 }
@@ -278,18 +287,18 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Only essential workers are mandated.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Only essential workers are required.">⚠️</span>`;
     } else {
-      return `<span class="icon-tooltip" title="All occupations and public spaces: Everyone is mandated.">🌐</span>`;
+      return `<span class="icon-tooltip" title="All occupations and public spaces: Everyone is required.">🌐</span>`;
     }
   }
   if (attr === "threshold") {
     if (value.includes("50 cases")) {
-      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Activates early.">🟢</span>`;
+      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Early intervention.">🟢</span>`;
     } else if (value.includes("100 cases")) {
-      return `<span class="icon-tooltip" title="100 cases per 100k, 15% increase: Activates at a moderate level.">🟠</span>`;
+      return `<span class="icon-tooltip" title="100 cases per 100k, 15% increase: Moderate intervention.">🟠</span>`;
     } else if (value.includes("200 cases")) {
-      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Activates only when severe.">🔴</span>`;
+      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Late intervention.">🔴</span>`;
     }
   }
   if (attr === "coverage") {
@@ -308,14 +317,14 @@ function getIcon(attr, value) {
     } else if (value.includes("Paid time off")) {
       return `<span class="icon-tooltip" title="Paid time off: Compensates for lost work time.">🕒</span>`;
     } else if (value.includes("10% discount")) {
-      return `<span class="icon-tooltip" title="10% discount on government services: Provides a financial incentive.">💸</span>`;
+      return `<span class="icon-tooltip" title="10% discount: Provides a financial incentive.">💸</span>`;
     }
   }
   if (attr === "exemption") {
     if (value.includes("Medical exemptions only")) {
       return `<span class="icon-tooltip" title="Medical exemptions only: Only those with verified health risks can opt out.">🩺</span>`;
     } else if (value.includes("Medical and religious exemptions")) {
-      return `<span class="icon-tooltip" title="Medical and religious exemptions: Permits opt-out for health and religious reasons.">🩺🙏</span>`;
+      return `<span class="icon-tooltip" title="Medical and religious exemptions: Allows opt-out for health and religious reasons.">🩺🙏</span>`;
     } else if (value.toLowerCase().includes("broad")) {
       return `<span class="icon-tooltip" title="Broad exemptions: Allows a wide range of opt-out reasons.">🩺🙏💡</span>`;
     }
