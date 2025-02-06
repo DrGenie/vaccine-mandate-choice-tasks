@@ -2,7 +2,7 @@
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
-let taskStartTime = 0; // Records start time for each dynamic task slide
+let taskStartTime = 0; // Records the start time for each dynamic task slide
 
 document.addEventListener("DOMContentLoaded", () => {
   // Attach event listeners for static slides
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("example-next").addEventListener("click", nextSlide);
   document.getElementById("instr-back").addEventListener("click", prevSlide);
   document.getElementById("start-tasks").addEventListener("click", nextSlide);
-
+  
   // Attach back button listeners for static slides
   document.getElementById("tutorial-back-2").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-3").addEventListener("click", prevSlide);
@@ -27,12 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tutorial-back-7").addEventListener("click", prevSlide);
   document.getElementById("example-back").addEventListener("click", prevSlide);
   document.getElementById("scenario-back").addEventListener("click", prevSlide);
-
-  // Attach listener for "Play Explanation" button on the example slide
+  
+  // Attach listener for "Play Explanation" button using SpeechSynthesis (Australian English)
   document.getElementById("play-explanation").addEventListener("click", () => {
-    // Use SpeechSynthesis API to read out a predefined explanation
-    const explanationText = "In this example, Vaccine Mandate A means that only high-risk occupations are mandated, the policy is activated early at 50 cases per 100k with a 10 percent weekly increase, lifted when fifty percent of people are vaccinated, offers no additional incentives, allows only medical exemptions, and has a low cost. Choosing this option means you prefer a more targeted and less burdensome mandate.";
+    const explanationText = "For this example, Vaccine Mandate A requires only high risk occupations to be vaccinated, activates early when there are 50 cases per one hundred thousand people with a ten percent weekly increase, is lifted once fifty percent of the population is vaccinated, offers no extra incentives, allows only medical exemptions, and has a low opportunity cost. Choosing this option means you prefer a more targeted and less burdensome approach.";
     const utterance = new SpeechSynthesisUtterance(explanationText);
+    utterance.lang = "en-AU";
     speechSynthesis.speak(utterance);
   });
 
@@ -94,7 +94,7 @@ function generateTaskSlides() {
           cost: "Moderate opportunity cost (AUD20)"
         }
       },
-      // … (Include scenarios 2 through 8 as needed)
+      // ... (Include scenarios 2 through 8 similarly)
       {
         scenario: 9,
         mandateA: {
@@ -170,11 +170,11 @@ function generateTaskSlides() {
           <legend>Which vaccine mandate option would you prefer? (Pick one option)</legend>
           <label>
             <input type="radio" name="choice" value="A" required>
-            I prefer Vaccine Mandate A – meaning you favor the features in column A.
+            I prefer Vaccine Mandate A – you are choosing the policy features shown in column A.
           </label>
           <label>
             <input type="radio" name="choice" value="B" required>
-            I prefer Vaccine Mandate B – meaning you favor the features in column B.
+            I prefer Vaccine Mandate B – you are choosing the policy features shown in column B.
           </label>
         </fieldset>
         <fieldset required>
@@ -219,7 +219,6 @@ function generateTaskSlides() {
       saveResponse(form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
-        // Delay submission slightly to allow slide transition
         setTimeout(submitResponses, 300);
       }
     });
@@ -274,12 +273,12 @@ function capitalize(str) {
 
 function getAttributeDescription(attr) {
   const desc = {
-    scope: "Indicates who must be vaccinated. 'High-risk occupations only' restricts the mandate to essential workers, while 'All occupations and public spaces' applies universally.",
-    threshold: "Sets the infection level required to activate the mandate. A lower threshold triggers early intervention; a higher threshold delays action until the outbreak is severe.",
-    coverage: "Specifies the vaccination percentage needed to lift the mandate. Lower percentages lead to earlier lifting; higher percentages require nearly universal vaccination.",
-    incentives: "Describes any rewards provided to encourage vaccination, such as extra days off or financial discounts.",
-    exemption: "Outlines who is allowed to opt out. Narrow exemptions (medical only) restrict opt-outs; broader exemptions include religious or personal reasons.",
-    cost: "Represents the economic or personal burden of complying with the mandate. Lower cost means less burden on individuals."
+    scope: "Indicates who must be vaccinated. 'High-risk occupations only' means only essential or critical workers are mandated; 'All occupations and public spaces' applies universally.",
+    threshold: "Sets the infection level required to activate the mandate. Lower thresholds trigger the mandate early, while higher thresholds delay intervention until the outbreak is severe.",
+    coverage: "Specifies the vaccination percentage needed to lift the mandate. A lower percentage leads to earlier lifting, whereas a higher percentage requires near-universal vaccination.",
+    incentives: "Describes any rewards provided to encourage vaccination, such as extra leave or financial benefits.",
+    exemption: "Outlines who is permitted to opt out. Narrow exemptions (medical only) limit opt-outs; broader exemptions allow additional reasons such as religious or personal beliefs.",
+    cost: "Represents the personal or economic burden of complying with the mandate. Options range from no cost (A$0) to high cost (A$50)."
   };
   return desc[attr] || "";
 }
@@ -287,18 +286,18 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Only essential workers are required.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Only essential workers are mandated.">⚠️</span>`;
     } else {
-      return `<span class="icon-tooltip" title="All occupations and public spaces: Everyone is required.">🌐</span>`;
+      return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
     }
   }
   if (attr === "threshold") {
     if (value.includes("50 cases")) {
-      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Early intervention.">🟢</span>`;
+      return `<span class="icon-tooltip" title="50 cases per 100k, 10% increase: Activates early to curb outbreaks.">🟢</span>`;
     } else if (value.includes("100 cases")) {
-      return `<span class="icon-tooltip" title="100 cases per 100k, 15% increase: Moderate intervention.">🟠</span>`;
+      return `<span class="icon-tooltip" title="100 cases per 100k, 15% increase: Activates at a moderate level.">🟠</span>`;
     } else if (value.includes("200 cases")) {
-      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Late intervention.">🔴</span>`;
+      return `<span class="icon-tooltip" title="200 cases per 100k, 20% increase: Activates only when the outbreak is severe.">🔴</span>`;
     }
   }
   if (attr === "coverage") {
@@ -315,29 +314,29 @@ function getIcon(attr, value) {
     if (value.includes("No incentives")) {
       return `<span class="icon-tooltip" title="No incentives provided.">🚫</span>`;
     } else if (value.includes("Paid time off")) {
-      return `<span class="icon-tooltip" title="Paid time off: Compensates for lost work time.">🕒</span>`;
+      return `<span class="icon-tooltip" title="Paid time off: Provides extra leave to compensate for time lost.">🕒</span>`;
     } else if (value.includes("10% discount")) {
-      return `<span class="icon-tooltip" title="10% discount: Provides a financial incentive.">💸</span>`;
+      return `<span class="icon-tooltip" title="10% discount: Provides a financial benefit.">💸</span>`;
     }
   }
   if (attr === "exemption") {
     if (value.includes("Medical exemptions only")) {
       return `<span class="icon-tooltip" title="Medical exemptions only: Only those with verified health risks can opt out.">🩺</span>`;
     } else if (value.includes("Medical and religious exemptions")) {
-      return `<span class="icon-tooltip" title="Medical and religious exemptions: Allows opt-out for health and religious reasons.">🩺🙏</span>`;
+      return `<span class="icon-tooltip" title="Medical and religious exemptions: Permits opt-out for both health and religious reasons.">🩺🙏</span>`;
     } else if (value.toLowerCase().includes("broad")) {
       return `<span class="icon-tooltip" title="Broad exemptions: Allows a wide range of opt-out reasons.">🩺🙏💡</span>`;
     }
   }
   if (attr === "cost") {
-    if (value.includes("AUD5")) {
+    if (value.includes("AUD0")) {
+      return `<span class="icon-tooltip" title="No opportunity cost (A$0): No personal or economic sacrifice required.">$0</span>`;
+    } else if (value.includes("AUD5")) {
       return `<span class="icon-tooltip" title="Low opportunity cost (A$5): Minimal burden.">$</span>`;
     } else if (value.includes("AUD20")) {
       return `<span class="icon-tooltip" title="Moderate opportunity cost (A$20): Typical burden.">$ $</span>`;
     } else if (value.includes("AUD50")) {
       return `<span class="icon-tooltip" title="High opportunity cost (A$50): Significant burden.">$ $ $</span>`;
-    } else if (value.includes("AUD0")) {
-      return `<span class="icon-tooltip" title="No opportunity cost (A$0): No burden.">$0</span>`;
     }
   }
   return "";
