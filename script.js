@@ -1,8 +1,8 @@
-// Global variables for slide navigation, response storagee, and timing
+// Global variables for slide navigation, response storage, and timing
 let currentSlideIndex = 0;
 let slides = [];
 let responses = [];
-let taskStartTime = 0; // To record start time for each task slide
+let taskStartTime = 0; // To record the start time for each task slide
 
 document.addEventListener("DOMContentLoaded", () => {
   // Attach event listeners for static slides
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("example-next").addEventListener("click", () => { nextSlide(); });
   document.getElementById("instr-back").addEventListener("click", () => { prevSlide(); });
   document.getElementById("start-tasks").addEventListener("click", () => { nextSlide(); });
-
+  
   // Attach back button listeners for static slides
   document.getElementById("tutorial-back-2").addEventListener("click", () => { prevSlide(); });
   document.getElementById("tutorial-back-3").addEventListener("click", () => { prevSlide(); });
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Generate dynamic task slides (9 choice tasks)
   generateTaskSlides();
 
-  // Refresh slides array after dynamic slides are appended
+  // Refresh the slides array after appending dynamic slides
   slides = Array.from(document.querySelectorAll(".slide"));
 
   // Show the first slide
@@ -250,7 +250,7 @@ function generateTaskSlides() {
     title.textContent = `Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
     
-    // Create comparison table with tooltips for each attribute
+    // Create a comparison table with info icons on each attribute name
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -267,9 +267,9 @@ function generateTaskSlides() {
     const attributes = ["scope", "threshold", "coverage", "incentives", "exemption", "cost"];
     attributes.forEach(attr => {
       const row = document.createElement("tr");
+      // Instead of simply setting title, insert an info icon next to the attribute label.
       const tdAttr = document.createElement("td");
-      tdAttr.textContent = capitalize(attr);
-      tdAttr.title = getAttributeDescription(attr);
+      tdAttr.innerHTML = `${capitalize(attr)} <span class="info-icon" data-tooltip="${getAttributeDescription(attr)}">ℹ️</span>`;
       row.appendChild(tdAttr);
       
       const tdA = document.createElement("td");
@@ -330,7 +330,7 @@ function generateTaskSlides() {
     
     const nextBtn = document.createElement("button");
     nextBtn.className = "next-button";
-    // For the last scenario, label as Submit
+    // Label as Submit if this is the last scenario
     nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
     nextBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -344,7 +344,7 @@ function generateTaskSlides() {
       saveResponse(form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
-        // Use a short delay to ensure the slide transition completes
+        // Use a slight delay to allow slide transition before submission
         setTimeout(submitResponses, 300);
       }
     });
@@ -411,7 +411,7 @@ function getAttributeDescription(attr) {
 function getIcon(attr, value) {
   if (attr === "scope") {
     if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only: Targets critical roles such as healthcare and emergency services.">⚠️</span>`;
+      return `<span class="icon-tooltip" title="High-risk occupations only: Targets individuals in critical roles such as healthcare and emergency services.">⚠️</span>`;
     } else {
       return `<span class="icon-tooltip" title="All occupations and public spaces: Applies to everyone.">🌐</span>`;
     }
@@ -430,9 +430,9 @@ function getIcon(attr, value) {
     if (value.includes("50")) percentage = 50;
     else if (value.includes("70")) percentage = 70;
     else if (value.includes("90")) percentage = 90;
-    return `<span class="icon-tooltip" title="${value}"><svg class="progress-svg" viewBox="0 0 50 10">
-              <rect width="50" height="10" fill="#ddd"/>
-              <rect width="${50 * percentage / 100}" height="10" fill="#4caf50"/>
+    return `<span class="icon-tooltip" title="${value}"><svg class="progress-svg" viewBox="0 0 30 6">
+              <rect width="30" height="6" fill="#ddd"/>
+              <rect width="${30 * percentage / 100}" height="6" fill="#4caf50"/>
             </svg></span>`;
   }
   if (attr === "incentives") {
