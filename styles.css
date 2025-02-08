@@ -45,7 +45,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 15px;
-  table-layout: fixed;
+  table-layout: fixed; /* Ensures columns have a fixed layout, preventing narrow attribute column */
 }
 
 th, td {
@@ -57,7 +57,7 @@ th, td {
 
 th {
   background-color: #e0f7fa;
-  width: 33%; /* Force more balanced width */
+  width: 33%; /* Force more evenly distributed columns */
 }
 
 /* Info Icon and Tooltip */
