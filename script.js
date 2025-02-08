@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     speechSynthesis.speak(utterance);
   });
 
-  // Watch block selection to enable "Start Tasks" button
+  // Block selection to enable "Start Tasks" button
   const blockSelect = document.getElementById("block-select");
   blockSelect.addEventListener("change", () => {
     document.getElementById("start-tasks").disabled = (blockSelect.value === "");
@@ -262,7 +262,7 @@ function submitResponses() {
   });
 
   const templateParams = {
-    to_email: "mesfin.genie@newcastle.edu.au",
+    to_email: "mesfin.genie@newcastle.edu.au", // or your target email
     subject: "Vaccine Mandate Survey Responses",
     message: emailContent,
     timestamp: new Date().toLocaleString()
@@ -333,16 +333,16 @@ function convertResponsesToCSV(data) {
 
 /**
  * Provide short text for attribute descriptions (used by ℹ️ tooltips)
- * with more detailed explanations for each attribute
+ * Now with more detailed explanations for each attribute
  */
 function getAttributeDescription(attr) {
   const desc = {
     scope: "Specifies who must be vaccinated—either only high-risk jobs or everyone in public/work spaces.",
-    threshold: "Infection level that triggers the mandate. Earlier thresholds try to prevent large outbreaks, later thresholds allow more initial freedom.",
-    coverage: "Vaccination percentage needed to lift the mandate (50%, 70%, or 90%). Higher coverage means stricter requirement before ending.",
-    incentives: "Whether people receive paid leave, financial discounts, or no extra benefits for vaccinating.",
-    exemption: "Valid reasons to skip vaccination: purely medical, medical+religious, or also personal beliefs.",
-    cost: "Time/monetary burden on individuals—could be zero, a small fee, moderate expense, or a high cost."
+    threshold: "Infection rate that triggers the mandate—earlier triggers aim to contain outbreaks sooner, while later triggers allow more initial freedom.",
+    coverage: "The vaccination percentage needed to lift the mandate (50%, 70%, or 90%). Higher coverage = stricter requirement.",
+    incentives: "Whether people receive paid time off, financial discounts, or no special benefits for getting vaccinated.",
+    exemption: "Reasons to skip vaccination: strictly medical, medical+religious, or adding personal beliefs too.",
+    cost: "Time/money burden—could be none (AUD0), low (AUD5), moderate (AUD20), or high (AUD50)."
   };
   return desc[attr] || "Attribute information not available.";
 }
@@ -375,9 +375,9 @@ function getIcon(attr, value) {
     if (value.includes("Medical exemptions only")) {
       return `<span class="icon-tooltip" title="Strictly medical reasons.">🩺</span>`;
     } else if (value.includes("medical and religious")) {
-      return `<span class="icon-tooltip" title="Medical & religious reasons allowed.">🩺🙏</span>`;
+      return `<span class="icon-tooltip" title="Medical & religious.">🩺🙏</span>`;
     } else if (value.includes("broad personal belief")) {
-      return `<span class="icon-tooltip" title="Includes personal/philosophical reasons.">🩺🙏💡</span>`;
+      return `<span class="icon-tooltip" title="Medical, religious, & personal beliefs.">🩺🙏💡</span>`;
     }
   }
 
@@ -428,7 +428,7 @@ function getIcon(attr, value) {
     } else if (value.includes("Paid time off")) {
       return `<span class="icon-tooltip" title="Paid leave (1–3 days).">🕒</span>`;
     } else if (value.includes("10% discount")) {
-      return `<span class="icon-tooltip" title="Financial discount on government services.">💸</span>`;
+      return `<span class="icon-tooltip" title="10% discount on government services.">💸</span>`;
     }
   }
 
@@ -461,7 +461,6 @@ function capitalize(str) {
  */
 function fullScenarioList() {
   return [
-    // Block 3, Scenario 1
     {
       block: 3,
       scenario: 1,
@@ -482,7 +481,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 3, Scenario 2
     {
       block: 3,
       scenario: 2,
@@ -503,7 +501,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 1, Scenario 3
     {
       block: 1,
       scenario: 3,
@@ -524,7 +521,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 3, Scenario 4
     {
       block: 3,
       scenario: 4,
@@ -545,7 +541,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 2, Scenario 5
     {
       block: 2,
       scenario: 5,
@@ -566,7 +561,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 3, Scenario 6
     {
       block: 3,
       scenario: 6,
@@ -587,7 +581,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 1, Scenario 7
     {
       block: 1,
       scenario: 7,
@@ -608,7 +601,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 1, Scenario 8
     {
       block: 1,
       scenario: 8,
@@ -629,7 +621,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 4, Scenario 9
     {
       block: 4,
       scenario: 9,
@@ -650,7 +641,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 4, Scenario 10
     {
       block: 4,
       scenario: 10,
@@ -671,7 +661,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 2, Scenario 11
     {
       block: 2,
       scenario: 11,
@@ -692,7 +681,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 2, Scenario 12
     {
       block: 2,
       scenario: 12,
@@ -713,7 +701,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 3, Scenario 13
     {
       block: 3,
       scenario: 13,
@@ -734,7 +721,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 4, Scenario 14
     {
       block: 4,
       scenario: 14,
@@ -755,7 +741,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 1, Scenario 15
     {
       block: 1,
       scenario: 15,
@@ -776,7 +761,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 2, Scenario 16
     {
       block: 2,
       scenario: 16,
@@ -797,7 +781,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 3, Scenario 17
     {
       block: 3,
       scenario: 17,
@@ -818,7 +801,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 1, Scenario 18
     {
       block: 1,
       scenario: 18,
@@ -839,7 +821,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 1, Scenario 19
     {
       block: 1,
       scenario: 19,
@@ -860,7 +841,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 3, Scenario 20
     {
       block: 3,
       scenario: 20,
@@ -881,7 +861,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 2, Scenario 21
     {
       block: 2,
       scenario: 21,
@@ -902,7 +881,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 2, Scenario 22
     {
       block: 2,
       scenario: 22,
@@ -923,7 +901,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 4, Scenario 23
     {
       block: 4,
       scenario: 23,
@@ -944,7 +921,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 3, Scenario 24
     {
       block: 3,
       scenario: 24,
@@ -965,7 +941,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 2, Scenario 25
     {
       block: 2,
       scenario: 25,
@@ -986,7 +961,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 4, Scenario 26
     {
       block: 4,
       scenario: 26,
@@ -1007,7 +981,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 1, Scenario 27
     {
       block: 1,
       scenario: 27,
@@ -1028,7 +1001,6 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
-    // Block 4, Scenario 28
     {
       block: 4,
       scenario: 28,
@@ -1049,7 +1021,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 4, Scenario 29
     {
       block: 4,
       scenario: 29,
@@ -1070,7 +1041,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 1, Scenario 30
     {
       block: 1,
       scenario: 30,
@@ -1091,7 +1061,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 4, Scenario 31
     {
       block: 4,
       scenario: 31,
@@ -1112,7 +1081,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 4, Scenario 32
     {
       block: 4,
       scenario: 32,
@@ -1133,7 +1101,6 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
-    // Block 2, Scenario 33
     {
       block: 2,
       scenario: 33,
@@ -1154,7 +1121,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 2, Scenario 34
     {
       block: 2,
       scenario: 34,
@@ -1175,7 +1141,6 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
-    // Block 3, Scenario 35
     {
       block: 3,
       scenario: 35,
@@ -1196,7 +1161,6 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
-    // Block 1, Scenario 36
     {
       block: 1,
       scenario: 36,
