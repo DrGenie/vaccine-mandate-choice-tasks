@@ -5,7 +5,6 @@ let responses = [];
 let taskStartTime = 0;
 let userBlock = null;
 
-// On page load
 document.addEventListener("DOMContentLoaded", () => {
   // Next buttons for the static slides
   document.getElementById("intro-next").addEventListener("click", nextSlide);
@@ -18,11 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("scenario-next").addEventListener("click", nextSlide);
   document.getElementById("example-next").addEventListener("click", nextSlide);
 
-  // Block selection button
+  // Block selection
   document.getElementById("instr-back").addEventListener("click", prevSlide);
   document.getElementById("start-tasks").addEventListener("click", onStartTasks);
 
-  // Back buttons for earlier slides
+  // Back buttons
   document.getElementById("tutorial-back-2").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-3").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-4").addEventListener("click", prevSlide);
@@ -45,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     speechSynthesis.speak(utterance);
   });
 
-  // Block selection logic
+  // Watch block selection changes
   const blockSelect = document.getElementById("block-select");
   blockSelect.addEventListener("change", () => {
     document.getElementById("start-tasks").disabled = (blockSelect.value === "");
@@ -57,13 +56,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * Called when the user clicks "Start Tasks" after choosing a block.
+ * Called when user clicks "Start Tasks" after choosing a block
  */
 function onStartTasks() {
   userBlock = document.getElementById("block-select").value;
   if (!userBlock) return;
-  nextSlide();
+  nextSlide(); // Move past the block selection slide
   generateTaskSlides(userBlock);
+  // Re-collect slides including newly generated task slides
+  slides = Array.from(document.querySelectorAll(".slide"));
+  showSlide(currentSlideIndex);
 }
 
 /**
@@ -73,14 +75,13 @@ function showSlide(index) {
   slides.forEach((slide, i) => {
     slide.classList.toggle("active", i === index);
   });
-  // If it's a dynamic task slide, record the start time
   if (slides[index] && slides[index].classList.contains("task-slide")) {
     taskStartTime = Date.now();
   }
 }
 
 /**
- * Move to next slide if possible
+ * Move to the next slide if possible
  */
 function nextSlide() {
   if (currentSlideIndex < slides.length - 1) {
@@ -90,7 +91,7 @@ function nextSlide() {
 }
 
 /**
- * Move to previous slide if possible
+ * Move to the previous slide if possible
  */
 function prevSlide() {
   if (currentSlideIndex > 0) {
@@ -100,217 +101,13 @@ function prevSlide() {
 }
 
 /**
- * Save response from a scenario form
- */
-function saveResponse(block, scenario, form, responseTime) {
-  const formData = new FormData(form);
-  const choice = formData.get("choice");
-  const notChoose = formData.get("not_choose");
-  responses.push({
-    block: block,
-    scenario: scenario,
-    choice: choice,
-    not_choose: notChoose,
-    responseTime: responseTime
-  });
-}
-
-/**
- * Attempt to send responses via EmailJS; fallback CSV if it fails
- */
-function submitResponses() {
-  let emailContent = "Survey Responses:\n\n";
-  responses.forEach(resp => {
-    emailContent += `Block: ${resp.block}, Scenario: ${resp.scenario}\n`;
-    emailContent += `Preferred Mandate: ${resp.choice}\n`;
-    emailContent += `No-mandate Option? ${resp.not_choose}\n`;
-    emailContent += `Response Time (ms): ${resp.responseTime}\n\n`;
-  });
-
-  const templateParams = {
-    to_email: "mesfin.genie@newcastle.edu.au", // Or your desired email
-    subject: "Vaccine Mandate Survey Responses",
-    message: emailContent,
-    timestamp: new Date().toLocaleString()
-  };
-
-  emailjs.send("service_zp0gsia", "template_2qu14s5", templateParams)
-    .then(() => {
-      showThankYou();
-      alert("Your responses have been sent via email. Thank you!");
-    }, (error) => {
-      console.error("Submission failed:", error);
-      alert("Error submitting your responses via email. Please use the CSV download option.");
-      showThankYou(); // Show the final slide anyway
-      showCSVDownload(); // Provide CSV fallback
-    });
-}
-
-/**
- * Show the final Thank You slide
- */
-function showThankYou() {
-  const container = document.getElementById("survey-container");
-  container.innerHTML = `
-    <div class="message">
-      <h2>Thank You!</h2>
-      <p>Your responses have been recorded. If email delivery failed, please download the CSV below.</p>
-      <div id="csv-container" style="text-align:center; margin-top:20px;"></div>
-    </div>
-  `;
-  showCSVDownload();
-}
-
-/**
- * Provide CSV download link
- */
-function showCSVDownload() {
-  const csvContainer = document.getElementById("csv-container");
-  if (!csvContainer) return;
-
-  const csvContent = convertResponsesToCSV(responses);
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "vaccine_mandate_survey_responses.csv";
-  link.textContent = "Download CSV of Responses";
-  link.style.display = "inline-block";
-  link.style.marginTop = "10px";
-  link.style.background = "#0a9396";
-  link.style.color = "#fff";
-  link.style.padding = "10px 15px";
-  link.style.borderRadius = "4px";
-  link.style.textDecoration = "none";
-  csvContainer.appendChild(link);
-}
-
-/**
- * Convert responses to CSV format
- */
-function convertResponsesToCSV(data) {
-  let csv = "Block,Scenario,Choice,NoMandateOption,ResponseTime(ms)\n";
-  data.forEach(item => {
-    csv += `${item.block},${item.scenario},${item.choice},${item.not_choose},${item.responseTime}\n`;
-  });
-  return csv;
-}
-
-// Provide short attribute descriptions for tooltips
-function getAttributeDescription(attr) {
-  const desc = {
-    scope: "Defines who must be vaccinated: only high-risk jobs or everyone in public spaces.",
-    threshold: "Infection level that triggers the mandate—lower thresholds intervene earlier.",
-    coverage: "Vaccination percentage required before the mandate ends.",
-    incentives: "Any rewards for vaccination (paid leave, 10% discount, etc.).",
-    exemption: "Reasons people can skip vaccination (medical only, or including religious/personal).",
-    cost: "Personal/time fees involved in getting vaccinated (travel, lost wages, etc.)."
-  };
-  return desc[attr] || "";
-}
-
-// For the "exemption" numeric codes from the data
-function interpretExemption(code) {
-  if (code === "1") return "Medical exemptions only";
-  if (code === "2") return "Medical and religious exemptions";
-  if (code === "3") return "Medical, religious, and broad personal belief exemptions";
-  return "Unknown exemption code";
-}
-
-// Provide icons based on attribute values
-function getIcon(attr, value) {
-  if (attr === "scope") {
-    if (value.includes("High-risk")) {
-      return `<span class="icon-tooltip" title="High-risk occupations only.">⚠️</span>`;
-    } else {
-      return `<span class="icon-tooltip" title="All occupations and public spaces.">🌐</span>`;
-    }
-  }
-
-  if (attr === "exemption") {
-    if (value.includes("Medical exemptions only")) {
-      return `<span class="icon-tooltip" title="Strictly medical-based exemption.">🩺</span>`;
-    } else if (value.includes("medical and religious")) {
-      return `<span class="icon-tooltip" title="Medical and religious reasons allowed.">🩺🙏</span>`;
-    } else if (value.includes("broad personal belief")) {
-      return `<span class="icon-tooltip" title="Includes personal, religious, and medical reasons.">🩺🙏💡</span>`;
-    }
-    return `<span class="icon-tooltip" title="Unknown exemption.">❓</span>`;
-  }
-
-  if (attr === "threshold") {
-    if (value.includes("50 cases")) {
-      return `<span class="icon-tooltip" title="Early trigger threshold.">🟢</span>`;
-    } else if (value.includes("100 cases")) {
-      return `<span class="icon-tooltip" title="Moderate trigger threshold.">🟠</span>`;
-    } else if (value.includes("200 cases")) {
-      return `<span class="icon-tooltip" title="Late trigger threshold.">🔴</span>`;
-    }
-  }
-
-  if (attr === "coverage") {
-    if (value.includes("50%")) {
-      return `
-        <span class="icon-tooltip" title="${value}">
-          <svg class="progress-svg" viewBox="0 0 30 6">
-            <rect width="30" height="6" fill="#ddd"/>
-            <rect width="15" height="6" fill="#4caf50"/>
-          </svg>
-        </span>`;
-    } else if (value.includes("70%")) {
-      return `
-        <span class="icon-tooltip" title="${value}">
-          <svg class="progress-svg" viewBox="0 0 30 6">
-            <rect width="30" height="6" fill="#ddd"/>
-            <rect width="21" height="6" fill="#4caf50"/>
-          </svg>
-        </span>`;
-    } else if (value.includes("90%")) {
-      return `
-        <span class="icon-tooltip" title="${value}">
-          <svg class="progress-svg" viewBox="0 0 30 6">
-            <rect width="30" height="6" fill="#ddd"/>
-            <rect width="27" height="6" fill="#4caf50"/>
-          </svg>
-        </span>`;
-    }
-  }
-
-  if (attr === "incentives") {
-    if (/^no/i.test(value) || value === "None") {
-      return `<span class="icon-tooltip" title="No additional incentives.">🚫</span>`;
-    } else if (value.includes("Paid time off")) {
-      return `<span class="icon-tooltip" title="Paid time off for vaccination.">🕒</span>`;
-    } else if (value.includes("10% discount")) {
-      return `<span class="icon-tooltip" title="Financial incentive: discount on government services.">💸</span>`;
-    }
-  }
-
-  if (attr === "cost") {
-    if (value.includes("AUD0")) {
-      return `<span class="icon-tooltip" title="No cost.">🪙 x 0</span>`;
-    } else if (value.includes("AUD5")) {
-      return `<span class="icon-tooltip" title="Low cost (~$5).">🪙</span>`;
-    } else if (value.includes("AUD20")) {
-      return `<span class="icon-tooltip" title="Moderate cost (~$20).">🪙🪙</span>`;
-    } else if (value.includes("AUD50")) {
-      return `<span class="icon-tooltip" title="High cost (~$50).">🪙🪙🪙</span>`;
-    }
-  }
-
-  return "";
-}
-
-/**
- * Generate exactly 9 tasks (scenarios) for the chosen block from the full 36-scenario list
+ * Generate 9 tasks for the chosen block from the full scenario list
  */
 function generateTaskSlides(chosenBlock) {
   const allScenarios = fullScenarioList();
-  // Filter to get only the 9 tasks for that block
+  // Filter to only the 9 tasks for this block
   const scenarios = allScenarios.filter(s => s.block.toString() === chosenBlock);
 
-  // Container for dynamic slides
   const taskContainer = document.getElementById("task-slides");
 
   scenarios.forEach((scenarioData, idx) => {
@@ -322,6 +119,7 @@ function generateTaskSlides(chosenBlock) {
     title.textContent = `Block ${scenarioData.block}, Scenario ${scenarioData.scenario}`;
     taskSlide.appendChild(title);
 
+    // Create a table for the two mandates
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -334,25 +132,26 @@ function generateTaskSlides(chosenBlock) {
     table.appendChild(thead);
 
     const tbody = document.createElement("tbody");
-    ["scope", "exemption", "threshold", "coverage", "incentives", "cost"].forEach(attr => {
+    const attributes = ["scope", "exemption", "threshold", "coverage", "incentives", "cost"];
+    attributes.forEach(attr => {
       const row = document.createElement("tr");
 
+      // Left-most cell: attribute name + info icon
       const tdAttr = document.createElement("td");
       tdAttr.innerHTML = `
-        <strong>${capitalize(attr)}</strong>
-        <br>
+        <strong>${capitalize(attr)}</strong><br>
         <span class="info-icon" data-tooltip="${getAttributeDescription(attr)}">ℹ️</span>
       `;
       row.appendChild(tdAttr);
 
-      // Mandate A
+      // Mandate A cell
       const tdA = document.createElement("td");
       let valA = scenarioData.mandateA[attr];
       if (attr === "exemption") valA = interpretExemption(valA);
       tdA.innerHTML = `${getIcon(attr, valA)} ${valA}`;
       row.appendChild(tdA);
 
-      // Mandate B
+      // Mandate B cell
       const tdB = document.createElement("td");
       let valB = scenarioData.mandateB[attr];
       if (attr === "exemption") valB = interpretExemption(valB);
@@ -364,7 +163,7 @@ function generateTaskSlides(chosenBlock) {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
 
-    // Form for responses
+    // Form for user's response
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.block}-${scenarioData.scenario}`;
     form.innerHTML = `
@@ -423,7 +222,6 @@ function generateTaskSlides(chosenBlock) {
       saveResponse(scenarioData.block, scenarioData.scenario, form, responseTime);
       nextSlide();
       if (idx === scenarios.length - 1) {
-        // All tasks done, submit
         setTimeout(submitResponses, 300);
       }
     });
@@ -435,8 +233,221 @@ function generateTaskSlides(chosenBlock) {
 }
 
 /**
- * The full 36-scenario list (blocks 1–4, 9 tasks each).
- * The user data from your prior instructions goes here.
+ * Save one scenario's response
+ */
+function saveResponse(block, scenario, form, responseTime) {
+  const formData = new FormData(form);
+  const choice = formData.get("choice");
+  const notChoose = formData.get("not_choose");
+  responses.push({
+    block: block,
+    scenario: scenario,
+    choice: choice,
+    not_choose: notChoose,
+    responseTime: responseTime
+  });
+}
+
+/**
+ * Send or fallback to CSV
+ */
+function submitResponses() {
+  let emailContent = "Survey Responses:\n\n";
+  responses.forEach(resp => {
+    emailContent += `Block: ${resp.block}, Scenario: ${resp.scenario}\n`;
+    emailContent += `Preferred Mandate: ${resp.choice}\n`;
+    emailContent += `No-mandate Option? ${resp.not_choose}\n`;
+    emailContent += `Response Time (ms): ${resp.responseTime}\n\n`;
+  });
+
+  const templateParams = {
+    to_email: "mesfin.genie@newcastle.edu.au", // Or your email
+    subject: "Vaccine Mandate Survey Responses",
+    message: emailContent,
+    timestamp: new Date().toLocaleString()
+  };
+
+  emailjs.send("service_zp0gsia", "template_2qu14s5", templateParams)
+    .then(() => {
+      showThankYou();
+      alert("Your responses have been sent via email. Thank you!");
+    }, (error) => {
+      console.error("Submission failed:", error);
+      alert("Error submitting responses via email. Please use the CSV download link.");
+      showThankYou();
+      showCSVDownload();
+    });
+}
+
+function showThankYou() {
+  const container = document.getElementById("survey-container");
+  container.innerHTML = `
+    <div class="message">
+      <h2>Thank You!</h2>
+      <p>Your responses have been recorded. If email delivery failed, please download the CSV below.</p>
+      <div id="csv-container" style="text-align:center; margin-top:20px;"></div>
+    </div>
+  `;
+  showCSVDownload();
+}
+
+/**
+ * Generate and show a CSV download link
+ */
+function showCSVDownload() {
+  const csvContainer = document.getElementById("csv-container");
+  if (!csvContainer) return;
+
+  const csvContent = convertResponsesToCSV(responses);
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "vaccine_mandate_survey_responses.csv";
+  link.textContent = "Download CSV of Responses";
+  link.style.display = "inline-block";
+  link.style.marginTop = "10px";
+  link.style.background = "#0a9396";
+  link.style.color = "#fff";
+  link.style.padding = "10px 15px";
+  link.style.borderRadius = "4px";
+  link.style.textDecoration = "none";
+  csvContainer.appendChild(link);
+}
+
+/**
+ * Convert responses array to CSV
+ */
+function convertResponsesToCSV(data) {
+  let csv = "Block,Scenario,Choice,NoMandateOption,ResponseTime(ms)\n";
+  data.forEach(item => {
+    csv += `${item.block},${item.scenario},${item.choice},${item.not_choose},${item.responseTime}\n`;
+  });
+  return csv;
+}
+
+/**
+ * Provide short text for attribute descriptions (used by ℹ️ tooltips)
+ */
+function getAttributeDescription(attr) {
+  const desc = {
+    scope: "Defines who must be vaccinated: high-risk jobs or everyone in public spaces.",
+    exemption: "Which exemptions are allowed (medical only, medical + religious, or broad personal beliefs).",
+    threshold: "Infection rate that triggers the mandate—earlier triggers aim to contain outbreaks sooner.",
+    coverage: "Vaccination percentage needed to lift the mandate (50%, 70%, or 90%).",
+    incentives: "Extra benefits (paid leave, discounts) or none.",
+    cost: "Personal expense/time for getting vaccinated, from zero to high cost."
+  };
+  return desc[attr] || "";
+}
+
+/**
+ * Interpret numeric exemption codes into text
+ */
+function interpretExemption(code) {
+  if (code === "1") return "Medical exemptions only";
+  if (code === "2") return "Medical and religious exemptions";
+  if (code === "3") return "Medical, religious, and broad personal belief exemptions";
+  return "Unknown exemption code";
+}
+
+/**
+ * Return an icon string for a given attribute value
+ */
+function getIcon(attr, value) {
+  if (attr === "scope") {
+    if (value.includes("High-risk")) {
+      return `<span class="icon-tooltip" title="High-risk occupations only.">⚠️</span>`;
+    } else {
+      return `<span class="icon-tooltip" title="All occupations and public spaces.">🌐</span>`;
+    }
+  }
+
+  if (attr === "exemption") {
+    if (value.includes("Medical exemptions only")) {
+      return `<span class="icon-tooltip" title="Strictly medical.">🩺</span>`;
+    } else if (value.includes("medical and religious")) {
+      return `<span class="icon-tooltip" title="Includes religious reasons.">🩺🙏</span>`;
+    } else if (value.includes("broad personal belief")) {
+      return `<span class="icon-tooltip" title="Also personal/philosophical reasons.">🩺🙏💡</span>`;
+    }
+    return `<span class="icon-tooltip" title="Unclear exemption.">❓</span>`;
+  }
+
+  if (attr === "threshold") {
+    if (value.includes("50 cases")) {
+      return `<span class="icon-tooltip" title="Early trigger threshold.">🟢</span>`;
+    } else if (value.includes("100 cases")) {
+      return `<span class="icon-tooltip" title="Moderate trigger threshold.">🟠</span>`;
+    } else if (value.includes("200 cases")) {
+      return `<span class="icon-tooltip" title="Late trigger threshold.">🔴</span>`;
+    }
+  }
+
+  if (attr === "coverage") {
+    if (value.includes("50%")) {
+      return `
+        <span class="icon-tooltip" title="${value}">
+          <svg class="progress-svg" viewBox="0 0 30 6">
+            <rect width="30" height="6" fill="#ddd"/>
+            <rect width="15" height="6" fill="#4caf50"/>
+          </svg>
+        </span>`;
+    } else if (value.includes("70%")) {
+      return `
+        <span class="icon-tooltip" title="${value}">
+          <svg class="progress-svg" viewBox="0 0 30 6">
+            <rect width="30" height="6" fill="#ddd"/>
+            <rect width="21" height="6" fill="#4caf50"/>
+          </svg>
+        </span>`;
+    } else if (value.includes("90%")) {
+      return `
+        <span class="icon-tooltip" title="${value}">
+          <svg class="progress-svg" viewBox="0 0 30 6">
+            <rect width="30" height="6" fill="#ddd"/>
+            <rect width="27" height="6" fill="#4caf50"/>
+          </svg>
+        </span>`;
+    }
+  }
+
+  if (attr === "incentives") {
+    if (/^no/i.test(value) || value === "None") {
+      return `<span class="icon-tooltip" title="No incentives offered.">🚫</span>`;
+    } else if (value.includes("Paid time off")) {
+      return `<span class="icon-tooltip" title="Paid leave for vaccination.">🕒</span>`;
+    } else if (value.includes("10% discount")) {
+      return `<span class="icon-tooltip" title="Financial discount on govt services.">💸</span>`;
+    }
+  }
+
+  if (attr === "cost") {
+    if (value.includes("AUD0")) {
+      return `<span class="icon-tooltip" title="No cost.">💰 x 0</span>`;
+    } else if (value.includes("AUD5")) {
+      return `<span class="icon-tooltip" title="Low cost (~AUD5).">💰</span>`;
+    } else if (value.includes("AUD20")) {
+      return `<span class="icon-tooltip" title="Moderate cost (~AUD20).">💰💰</span>`;
+    } else if (value.includes("AUD50")) {
+      return `<span class="icon-tooltip" title="High cost (~AUD50).">💰💰💰</span>`;
+    }
+  }
+
+  return "";
+}
+
+/**
+ * Capitalize attribute labels
+ */
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Full 36-scenario list, grouped by block (1–4). 
+ * Each block has 9 scenarios, each scenario has two mandates (A, B).
  */
 function fullScenarioList() {
   return [
