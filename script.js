@@ -6,7 +6,7 @@ let taskStartTime = 0;
 let userBlock = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Next buttons for the static slides
+  // Next-button event listeners for the static slides
   document.getElementById("intro-next").addEventListener("click", nextSlide);
   document.getElementById("tutorial-next-2").addEventListener("click", nextSlide);
   document.getElementById("tutorial-next-3").addEventListener("click", nextSlide);
@@ -17,11 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("scenario-next").addEventListener("click", nextSlide);
   document.getElementById("example-next").addEventListener("click", nextSlide);
 
-  // Block selection
-  document.getElementById("instr-back").addEventListener("click", prevSlide);
-  document.getElementById("start-tasks").addEventListener("click", onStartTasks);
-
-  // Back buttons
+  // Back-button event listeners
   document.getElementById("tutorial-back-2").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-3").addEventListener("click", prevSlide);
   document.getElementById("tutorial-back-4").addEventListener("click", prevSlide);
@@ -30,6 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tutorial-back-7").addEventListener("click", prevSlide);
   document.getElementById("scenario-back").addEventListener("click", prevSlide);
   document.getElementById("example-back").addEventListener("click", prevSlide);
+  document.getElementById("instr-back").addEventListener("click", prevSlide);
+
+  // Start tasks button
+  document.getElementById("start-tasks").addEventListener("click", onStartTasks);
 
   // SpeechSynthesis example
   document.getElementById("play-explanation").addEventListener("click", () => {
@@ -44,44 +44,32 @@ document.addEventListener("DOMContentLoaded", () => {
     speechSynthesis.speak(utterance);
   });
 
-  // Watch block selection changes
+  // Watch block selection to enable "Start Tasks" button
   const blockSelect = document.getElementById("block-select");
   blockSelect.addEventListener("change", () => {
     document.getElementById("start-tasks").disabled = (blockSelect.value === "");
   });
 
-  // Collect slides
+  // Collect all static slides
   slides = Array.from(document.querySelectorAll(".slide"));
   showSlide(currentSlideIndex);
 });
 
 /**
- * Called when user clicks "Start Tasks" after choosing a block
- */
-function onStartTasks() {
-  userBlock = document.getElementById("block-select").value;
-  if (!userBlock) return;
-  nextSlide(); // Move past the block selection slide
-  generateTaskSlides(userBlock);
-  // Re-collect slides including newly generated task slides
-  slides = Array.from(document.querySelectorAll(".slide"));
-  showSlide(currentSlideIndex);
-}
-
-/**
- * Show the current slide by index
+ * Show the slide at currentSlideIndex
  */
 function showSlide(index) {
   slides.forEach((slide, i) => {
     slide.classList.toggle("active", i === index);
   });
+  // If this is a dynamic task slide, record the start time
   if (slides[index] && slides[index].classList.contains("task-slide")) {
     taskStartTime = Date.now();
   }
 }
 
 /**
- * Move to the next slide if possible
+ * Move to the next slide
  */
 function nextSlide() {
   if (currentSlideIndex < slides.length - 1) {
@@ -91,7 +79,7 @@ function nextSlide() {
 }
 
 /**
- * Move to the previous slide if possible
+ * Move to the previous slide
  */
 function prevSlide() {
   if (currentSlideIndex > 0) {
@@ -101,11 +89,23 @@ function prevSlide() {
 }
 
 /**
- * Generate 9 tasks for the chosen block from the full scenario list
+ * Called when user clicks "Start Tasks" after selecting a block
+ */
+function onStartTasks() {
+  userBlock = document.getElementById("block-select").value;
+  if (!userBlock) return;
+  nextSlide(); // move forward from the block selection slide
+  generateTaskSlides(userBlock);
+  // Re-collect slides including newly generated tasks
+  slides = Array.from(document.querySelectorAll(".slide"));
+  showSlide(currentSlideIndex);
+}
+
+/**
+ * Generate exactly 9 tasks for the chosen block
  */
 function generateTaskSlides(chosenBlock) {
   const allScenarios = fullScenarioList();
-  // Filter to only the 9 tasks for this block
   const scenarios = allScenarios.filter(s => s.block.toString() === chosenBlock);
 
   const taskContainer = document.getElementById("task-slides");
@@ -131,8 +131,8 @@ function generateTaskSlides(chosenBlock) {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    const tbody = document.createElement("tbody");
     const attributes = ["scope", "exemption", "threshold", "coverage", "incentives", "cost"];
+    const tbody = document.createElement("tbody");
     attributes.forEach(attr => {
       const row = document.createElement("tr");
 
@@ -163,7 +163,7 @@ function generateTaskSlides(chosenBlock) {
     table.appendChild(tbody);
     taskSlide.appendChild(table);
 
-    // Form for user's response
+    // Create a form for user’s preference
     const form = document.createElement("form");
     form.id = `form-task-${scenarioData.block}-${scenarioData.scenario}`;
     form.innerHTML = `
@@ -196,7 +196,7 @@ function generateTaskSlides(chosenBlock) {
     `;
     taskSlide.appendChild(form);
 
-    // Navigation buttons
+    // Nav buttons
     const navDiv = document.createElement("div");
     navDiv.className = "navigation-buttons";
 
@@ -214,6 +214,7 @@ function generateTaskSlides(chosenBlock) {
     nextBtn.textContent = (idx === scenarios.length - 1) ? "Submit" : "Next";
     nextBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      // Validate form
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
@@ -233,7 +234,7 @@ function generateTaskSlides(chosenBlock) {
 }
 
 /**
- * Save one scenario's response
+ * Save the user’s choice for one scenario
  */
 function saveResponse(block, scenario, form, responseTime) {
   const formData = new FormData(form);
@@ -249,7 +250,7 @@ function saveResponse(block, scenario, form, responseTime) {
 }
 
 /**
- * Send or fallback to CSV
+ * Attempt to send responses via EmailJS; fallback CSV if failure
  */
 function submitResponses() {
   let emailContent = "Survey Responses:\n\n";
@@ -261,7 +262,7 @@ function submitResponses() {
   });
 
   const templateParams = {
-    to_email: "mesfin.genie@newcastle.edu.au", // Or your email
+    to_email: "mesfin.genie@newcastle.edu.au",
     subject: "Vaccine Mandate Survey Responses",
     message: emailContent,
     timestamp: new Date().toLocaleString()
@@ -273,12 +274,15 @@ function submitResponses() {
       alert("Your responses have been sent via email. Thank you!");
     }, (error) => {
       console.error("Submission failed:", error);
-      alert("Error submitting responses via email. Please use the CSV download link.");
+      alert("Error submitting responses via email. Please download the CSV file instead.");
       showThankYou();
       showCSVDownload();
     });
 }
 
+/**
+ * Show the final thank-you slide
+ */
 function showThankYou() {
   const container = document.getElementById("survey-container");
   container.innerHTML = `
@@ -292,7 +296,7 @@ function showThankYou() {
 }
 
 /**
- * Generate and show a CSV download link
+ * Create a CSV download link for fallback or extra confirmation
  */
 function showCSVDownload() {
   const csvContainer = document.getElementById("csv-container");
@@ -317,7 +321,7 @@ function showCSVDownload() {
 }
 
 /**
- * Convert responses array to CSV
+ * Convert the responses array to CSV format
  */
 function convertResponsesToCSV(data) {
   let csv = "Block,Scenario,Choice,NoMandateOption,ResponseTime(ms)\n";
@@ -329,21 +333,22 @@ function convertResponsesToCSV(data) {
 
 /**
  * Provide short text for attribute descriptions (used by ℹ️ tooltips)
+ * with more detailed explanations for each attribute
  */
 function getAttributeDescription(attr) {
   const desc = {
-    scope: "Defines who must be vaccinated: high-risk jobs or everyone in public spaces.",
-    exemption: "Which exemptions are allowed (medical only, medical + religious, or broad personal beliefs).",
-    threshold: "Infection rate that triggers the mandate—earlier triggers aim to contain outbreaks sooner.",
-    coverage: "Vaccination percentage needed to lift the mandate (50%, 70%, or 90%).",
-    incentives: "Extra benefits (paid leave, discounts) or none.",
-    cost: "Personal expense/time for getting vaccinated, from zero to high cost."
+    scope: "Specifies who must be vaccinated—either only high-risk jobs or everyone in public/work spaces.",
+    threshold: "Infection level that triggers the mandate. Earlier thresholds try to prevent large outbreaks, later thresholds allow more initial freedom.",
+    coverage: "Vaccination percentage needed to lift the mandate (50%, 70%, or 90%). Higher coverage means stricter requirement before ending.",
+    incentives: "Whether people receive paid leave, financial discounts, or no extra benefits for vaccinating.",
+    exemption: "Valid reasons to skip vaccination: purely medical, medical+religious, or also personal beliefs.",
+    cost: "Time/monetary burden on individuals—could be zero, a small fee, moderate expense, or a high cost."
   };
-  return desc[attr] || "";
+  return desc[attr] || "Attribute information not available.";
 }
 
 /**
- * Interpret numeric exemption codes into text
+ * Interpret numeric exemption codes
  */
 function interpretExemption(code) {
   if (code === "1") return "Medical exemptions only";
@@ -353,9 +358,10 @@ function interpretExemption(code) {
 }
 
 /**
- * Return an icon string for a given attribute value
+ * Return an appropriate icon for each attribute value
  */
 function getIcon(attr, value) {
+  // Scope
   if (attr === "scope") {
     if (value.includes("High-risk")) {
       return `<span class="icon-tooltip" title="High-risk occupations only.">⚠️</span>`;
@@ -364,17 +370,18 @@ function getIcon(attr, value) {
     }
   }
 
+  // Exemption
   if (attr === "exemption") {
     if (value.includes("Medical exemptions only")) {
-      return `<span class="icon-tooltip" title="Strictly medical.">🩺</span>`;
+      return `<span class="icon-tooltip" title="Strictly medical reasons.">🩺</span>`;
     } else if (value.includes("medical and religious")) {
-      return `<span class="icon-tooltip" title="Includes religious reasons.">🩺🙏</span>`;
+      return `<span class="icon-tooltip" title="Medical & religious reasons allowed.">🩺🙏</span>`;
     } else if (value.includes("broad personal belief")) {
-      return `<span class="icon-tooltip" title="Also personal/philosophical reasons.">🩺🙏💡</span>`;
+      return `<span class="icon-tooltip" title="Includes personal/philosophical reasons.">🩺🙏💡</span>`;
     }
-    return `<span class="icon-tooltip" title="Unclear exemption.">❓</span>`;
   }
 
+  // Threshold
   if (attr === "threshold") {
     if (value.includes("50 cases")) {
       return `<span class="icon-tooltip" title="Early trigger threshold.">🟢</span>`;
@@ -385,6 +392,7 @@ function getIcon(attr, value) {
     }
   }
 
+  // Coverage
   if (attr === "coverage") {
     if (value.includes("50%")) {
       return `
@@ -413,19 +421,21 @@ function getIcon(attr, value) {
     }
   }
 
+  // Incentives
   if (attr === "incentives") {
     if (/^no/i.test(value) || value === "None") {
       return `<span class="icon-tooltip" title="No incentives offered.">🚫</span>`;
     } else if (value.includes("Paid time off")) {
-      return `<span class="icon-tooltip" title="Paid leave for vaccination.">🕒</span>`;
+      return `<span class="icon-tooltip" title="Paid leave (1–3 days).">🕒</span>`;
     } else if (value.includes("10% discount")) {
-      return `<span class="icon-tooltip" title="Financial discount on govt services.">💸</span>`;
+      return `<span class="icon-tooltip" title="Financial discount on government services.">💸</span>`;
     }
   }
 
+  // Cost
   if (attr === "cost") {
     if (value.includes("AUD0")) {
-      return `<span class="icon-tooltip" title="No cost.">💰 x 0</span>`;
+      return `<span class="icon-tooltip" title="No cost (AUD0).">💰 x 0</span>`;
     } else if (value.includes("AUD5")) {
       return `<span class="icon-tooltip" title="Low cost (~AUD5).">💰</span>`;
     } else if (value.includes("AUD20")) {
@@ -446,12 +456,12 @@ function capitalize(str) {
 }
 
 /**
- * Full 36-scenario list, grouped by block (1–4). 
- * Each block has 9 scenarios, each scenario has two mandates (A, B).
+ * The full 36-scenario list, each with block, scenario, and two mandates
+ * (9 scenarios per block)
  */
 function fullScenarioList() {
   return [
-    // 1) Block 3, Scenario 1
+    // Block 3, Scenario 1
     {
       block: 3,
       scenario: 1,
@@ -472,6 +482,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 3, Scenario 2
     {
       block: 3,
       scenario: 2,
@@ -492,6 +503,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 1, Scenario 3
     {
       block: 1,
       scenario: 3,
@@ -512,6 +524,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 3, Scenario 4
     {
       block: 3,
       scenario: 4,
@@ -532,6 +545,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 2, Scenario 5
     {
       block: 2,
       scenario: 5,
@@ -552,6 +566,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 3, Scenario 6
     {
       block: 3,
       scenario: 6,
@@ -572,6 +587,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 1, Scenario 7
     {
       block: 1,
       scenario: 7,
@@ -592,6 +608,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 1, Scenario 8
     {
       block: 1,
       scenario: 8,
@@ -612,6 +629,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 4, Scenario 9
     {
       block: 4,
       scenario: 9,
@@ -632,6 +650,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 4, Scenario 10
     {
       block: 4,
       scenario: 10,
@@ -652,6 +671,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 2, Scenario 11
     {
       block: 2,
       scenario: 11,
@@ -672,6 +692,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 2, Scenario 12
     {
       block: 2,
       scenario: 12,
@@ -692,6 +713,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 3, Scenario 13
     {
       block: 3,
       scenario: 13,
@@ -712,6 +734,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 4, Scenario 14
     {
       block: 4,
       scenario: 14,
@@ -732,6 +755,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 1, Scenario 15
     {
       block: 1,
       scenario: 15,
@@ -752,6 +776,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 2, Scenario 16
     {
       block: 2,
       scenario: 16,
@@ -772,6 +797,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 3, Scenario 17
     {
       block: 3,
       scenario: 17,
@@ -792,6 +818,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 1, Scenario 18
     {
       block: 1,
       scenario: 18,
@@ -812,6 +839,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 1, Scenario 19
     {
       block: 1,
       scenario: 19,
@@ -832,6 +860,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 3, Scenario 20
     {
       block: 3,
       scenario: 20,
@@ -852,6 +881,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 2, Scenario 21
     {
       block: 2,
       scenario: 21,
@@ -872,6 +902,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 2, Scenario 22
     {
       block: 2,
       scenario: 22,
@@ -892,6 +923,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 4, Scenario 23
     {
       block: 4,
       scenario: 23,
@@ -912,6 +944,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 3, Scenario 24
     {
       block: 3,
       scenario: 24,
@@ -932,6 +965,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 2, Scenario 25
     {
       block: 2,
       scenario: 25,
@@ -952,6 +986,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 4, Scenario 26
     {
       block: 4,
       scenario: 26,
@@ -972,6 +1007,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 1, Scenario 27
     {
       block: 1,
       scenario: 27,
@@ -992,6 +1028,7 @@ function fullScenarioList() {
         cost: "No opportunity cost (AUD0)"
       }
     },
+    // Block 4, Scenario 28
     {
       block: 4,
       scenario: 28,
@@ -1012,6 +1049,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 4, Scenario 29
     {
       block: 4,
       scenario: 29,
@@ -1032,6 +1070,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 1, Scenario 30
     {
       block: 1,
       scenario: 30,
@@ -1052,6 +1091,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 4, Scenario 31
     {
       block: 4,
       scenario: 31,
@@ -1072,6 +1112,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 4, Scenario 32
     {
       block: 4,
       scenario: 32,
@@ -1092,6 +1133,7 @@ function fullScenarioList() {
         cost: "Low opportunity cost (AUD5)"
       }
     },
+    // Block 2, Scenario 33
     {
       block: 2,
       scenario: 33,
@@ -1112,6 +1154,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 2, Scenario 34
     {
       block: 2,
       scenario: 34,
@@ -1132,6 +1175,7 @@ function fullScenarioList() {
         cost: "Moderate opportunity cost (AUD20)"
       }
     },
+    // Block 3, Scenario 35
     {
       block: 3,
       scenario: 35,
@@ -1152,6 +1196,7 @@ function fullScenarioList() {
         cost: "High opportunity cost (AUD50)"
       }
     },
+    // Block 1, Scenario 36
     {
       block: 1,
       scenario: 36,
