@@ -45,7 +45,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 15px;
-  table-layout: fixed; /* Ensures columns have a fixed layout, preventing narrow attribute column */
+  table-layout: auto; /* Let columns adjust based on content, more flexible than fixed */
 }
 
 th, td {
@@ -57,7 +57,7 @@ th, td {
 
 th {
   background-color: #e0f7fa;
-  width: 33%; /* Force more evenly distributed columns */
+  width: 28%; /* Nudges columns for a balanced look */
 }
 
 /* Info Icon and Tooltip */
@@ -84,7 +84,7 @@ th {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
-  width: 260px;
+  width: 270px;
   text-align: left;
   z-index: 999;
 }
@@ -187,7 +187,7 @@ th {
     padding: 15px;
     max-width: 95%;
   }
-  th, td {
+  table, th, td {
     font-size: 14px;
   }
   .progress-svg {
