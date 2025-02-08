@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 850px;
   margin: 0 auto;
   background-color: #fff;
   padding: 25px;
@@ -45,16 +45,19 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 15px;
+  table-layout: fixed;
 }
 
 th, td {
   border: 1px solid #ccc;
   padding: 10px;
   vertical-align: top;
+  word-wrap: break-word;
 }
 
 th {
   background-color: #e0f7fa;
+  width: 33%; /* Force more balanced width */
 }
 
 /* Info Icon and Tooltip */
@@ -69,19 +72,19 @@ th {
 .info-icon::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: 125%;
+  bottom: 130%;
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
   color: #fff;
-  padding: 5px;
+  padding: 6px;
   border-radius: 4px;
   white-space: pre-wrap;
   font-size: 12px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
-  width: 240px;
+  width: 260px;
   text-align: left;
   z-index: 999;
 }
@@ -101,17 +104,17 @@ th {
 .icon-tooltip:hover::after {
   content: attr(title);
   position: absolute;
-  bottom: 120%;
+  bottom: 130%;
   left: 50%;
   transform: translateX(-50%);
   background-color: #0a9396;
   color: #fff;
-  padding: 5px;
+  padding: 6px;
   border-radius: 4px;
   white-space: pre-wrap;
   font-size: 12px;
   pointer-events: none;
-  width: 220px;
+  width: 250px;
   text-align: left;
   opacity: 1;
   z-index: 999;
@@ -121,6 +124,7 @@ th {
 .progress-svg {
   width: 30px;
   height: 6px;
+  vertical-align: middle;
 }
 
 /* Navigation Buttons */
@@ -133,15 +137,20 @@ th {
   background-color: #0a9396;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 25px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
   margin: 5px;
+  transition: background-color 0.2s ease;
 }
 
 .back-button {
   background-color: #005f73;
+}
+
+.next-button:hover, .back-button:hover {
+  opacity: 0.9;
 }
 
 .next-button:disabled,
@@ -176,29 +185,37 @@ th {
   }
   .container {
     padding: 15px;
+    max-width: 95%;
   }
-  table, th, td {
-    font-size: 14px;
-  }
-  .next-button, .back-button {
-    padding: 8px 16px;
+  th, td {
     font-size: 14px;
   }
   .progress-svg {
     width: 25px;
     height: 5px;
   }
+  .next-button, .back-button {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
   .info-icon, .icon-tooltip {
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 
 @media (max-width: 480px) {
-  table, th, td {
-    font-size: 12px;
+  table {
+    font-size: 13px;
   }
   .next-button, .back-button {
-    padding: 6px 12px;
+    padding: 6px 15px;
     font-size: 12px;
+  }
+  .progress-svg {
+    width: 20px;
+    height: 4px;
+  }
+  .info-icon, .icon-tooltip {
+    font-size: 14px;
   }
 }
