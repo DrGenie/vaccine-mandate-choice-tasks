@@ -74,14 +74,14 @@ th {
   transform: translateX(-50%);
   background-color: #333;
   color: #fff;
-  padding: 6px;
+  padding: 5px;
   border-radius: 4px;
   white-space: pre-wrap;
-  font-size: 13px;
+  font-size: 12px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
-  width: 260px;
+  width: 240px;
   text-align: left;
   z-index: 999;
 }
@@ -106,12 +106,12 @@ th {
   transform: translateX(-50%);
   background-color: #0a9396;
   color: #fff;
-  padding: 6px;
+  padding: 5px;
   border-radius: 4px;
   white-space: pre-wrap;
-  font-size: 13px;
+  font-size: 12px;
   pointer-events: none;
-  width: 260px;
+  width: 220px;
   text-align: left;
   opacity: 1;
   z-index: 999;
@@ -150,29 +150,15 @@ th {
   cursor: not-allowed;
 }
 
-/* Example Animation / Video */
+/* Example Animation / Iframe */
 .animated-demo {
   margin: 20px auto;
   text-align: center;
 }
 
-.animated-demo video {
+.animated-demo iframe {
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 320px;
-  height: 180px;
-  max-width: 100%;
-}
-
-/* Optional pulse animation */
-.pulse-svg {
-  animation: pulse 1s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%   { transform: scale(1);   opacity: 1; }
-  50%  { transform: scale(1.4); opacity: 0.6; }
-  100% { transform: scale(1);   opacity: 1; }
 }
 
 /* Thank You Message */
@@ -183,7 +169,7 @@ th {
   margin-top: 20px;
 }
 
-/* Responsive Adjustments for Mobile and Tablet */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   body {
     padding: 10px;
@@ -205,10 +191,6 @@ th {
   .info-icon, .icon-tooltip {
     font-size: 16px;
   }
-  .info-icon::after, .icon-tooltip:hover::after {
-    width: 220px;
-    font-size: 12px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -218,9 +200,5 @@ th {
   .next-button, .back-button {
     padding: 6px 12px;
     font-size: 12px;
-  }
-  .info-icon::after, .icon-tooltip:hover::after {
-    width: 200px;
-    font-size: 11px;
   }
 }
